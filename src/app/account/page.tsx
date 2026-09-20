@@ -13,6 +13,8 @@ import {
   Briefcase,
   ArrowRight,
   Sparkles,
+  PlusCircle,
+  Home,
 } from "lucide-react";
 
 export default async function AccountPage() {
@@ -53,7 +55,24 @@ export default async function AccountPage() {
             <ShieldCheck className="h-4 w-4" />
             <span>Admin Moderation</span>
           </Link>
-        ) : user?.role === "AGENT" || user?.role === "OWNER" ? (
+        ) : user?.role === "OWNER" ? (
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/listings/new"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-amber-700 transition-colors"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>Post Housing (物件掲載)</span>
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              <Home className="h-4 w-4 text-amber-500" />
+              <span>Owner Dashboard</span>
+            </Link>
+          </div>
+        ) : user?.role === "AGENT" ? (
           <Link
             href="/dashboard"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-brand-800 transition-colors"

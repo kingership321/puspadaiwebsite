@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Scale,
   Globe,
+  PlusCircle,
 } from "lucide-react";
 import { UserRole } from "@/types";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -182,14 +183,40 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
               <ShieldCheck className="h-3.5 w-3.5" />
               Admin Center
             </Link>
-          ) : currentRole === "AGENT" || currentRole === "OWNER" ? (
-            <Link
-              href="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-800 transition-colors"
-            >
-              <Briefcase className="h-3.5 w-3.5" />
-              Dashboard
-            </Link>
+          ) : currentRole === "OWNER" ? (
+            <div className="hidden sm:flex items-center gap-2">
+              <Link
+                href="/dashboard/listings/new"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-amber-700 transition-colors"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span>Post Housing (物件掲載)</span>
+              </Link>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <Home className="h-3.5 w-3.5 text-amber-500" />
+                <span>Owner Portal</span>
+              </Link>
+            </div>
+          ) : currentRole === "AGENT" ? (
+            <div className="hidden sm:flex items-center gap-2">
+              <Link
+                href="/dashboard/listings/new"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-800 transition-colors"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span>New Listing</span>
+              </Link>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <Briefcase className="h-3.5 w-3.5 text-brand-600" />
+                <span>Dashboard</span>
+              </Link>
+            </div>
           ) : (
             <Link
               href="/account"
@@ -233,15 +260,45 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
               <User className="h-4 w-4 text-slate-500" />
               My Account
             </Link>
-            {(currentRole === "AGENT" || currentRole === "OWNER") && (
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 rounded-lg bg-brand-50 text-brand-700 px-3 py-2 text-sm font-semibold"
-              >
-                <Briefcase className="h-4 w-4" />
-                Management Dashboard
-              </Link>
+            {currentRole === "OWNER" && (
+              <>
+                <Link
+                  href="/dashboard/listings/new"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-lg bg-amber-50 text-amber-700 px-3 py-2 text-sm font-semibold"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  Post Housing (物件掲載)
+                </Link>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700"
+                >
+                  <Home className="h-4 w-4 text-amber-500" />
+                  Owner Portal
+                </Link>
+              </>
+            )}
+            {currentRole === "AGENT" && (
+              <>
+                <Link
+                  href="/dashboard/listings/new"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-lg bg-brand-50 text-brand-700 px-3 py-2 text-sm font-semibold"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  New Listing
+                </Link>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700"
+                >
+                  <Briefcase className="h-4 w-4 text-brand-600" />
+                  Agent Dashboard
+                </Link>
+              </>
             )}
             {currentRole === "ADMIN" && (
               <Link

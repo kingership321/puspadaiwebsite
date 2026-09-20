@@ -21,6 +21,7 @@ import {
   Train,
   X,
   Layers,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -33,6 +34,14 @@ interface CityOption {
 export default function NewListingPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeRole, setActiveRole] = useState<string>("AGENT");
+
+  useEffect(() => {
+    const match = document.cookie.match(new RegExp("(^| )haven_role=([^;]+)"));
+    if (match && match[2]) {
+      setActiveRole(match[2]);
+    }
+  }, []);
 
   // Form Fields
   const [title, setTitle] = useState("");
@@ -352,13 +361,26 @@ export default function NewListingPage() {
           <span>Back to Dashboard</span>
         </Link>
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
-            <Building2 className="h-5 w-5" />
+          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+            activeRole === "OWNER" ? "bg-amber-50 text-amber-600" : "bg-brand-50 text-brand-700"
+          }`}>
+            {activeRole === "OWNER" ? <Home className="h-5 w-5" /> : <Building2 className="h-5 w-5" />}
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-900">Publish New Listing</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-black text-slate-900">
+                {activeRole === "OWNER" ? "Post Your Housing (家主・オーナー物件掲載)" : "Publish New Listing"}
+              </h1>
+              {activeRole === "OWNER" && (
+                <span className="rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                  Owner Mode
+                </span>
+              )}
+            </div>
             <p className="text-xs text-slate-500">
-              Submit a residential property for Japanese marketplace indexing (SUUMO specifications).
+              {activeRole === "OWNER"
+                ? "Upload housing photos, set your rent or sale terms, and publish directly to the marketplace."
+                : "Submit a residential property for Japanese marketplace indexing (SUUMO specifications)."}
             </p>
           </div>
         </div>
@@ -949,9 +971,15 @@ export default function NewListingPage() {
               variant="primary"
               size="lg"
               isLoading={isSubmitting}
-              className="px-8 shadow-lg shadow-brand-700/20"
+              className={`px-8 shadow-lg ${
+                activeRole === "OWNER"
+                  ? "bg-amber-600 hover:bg-amber-700 shadow-amber-600/20"
+                  : "shadow-brand-700/20"
+              }`}
             >
-              Submit Listing for Indexing (公開登録)
+              {activeRole === "OWNER"
+                ? "Publish Housing as Owner (家主として掲載)"
+                : "Submit Listing for Indexing (公開登録)"}
             </Button>
           </div>
         </div>

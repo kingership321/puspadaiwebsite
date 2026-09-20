@@ -40,26 +40,36 @@ export default async function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-brand-50 border border-brand-200 px-3 py-0.5 text-xs font-bold text-brand-700">
-              Agent & Owner Portal
+            <span className={`rounded-full border px-3 py-0.5 text-xs font-bold ${
+              user?.role === "OWNER"
+                ? "bg-amber-50 border-amber-200 text-amber-800"
+                : "bg-brand-50 border-brand-200 text-brand-700"
+            }`}>
+              {user?.role === "OWNER" ? "Owner Portal (家主・オーナー)" : "Agent & Owner Portal"}
             </span>
             <span className="text-xs text-slate-400">• Active Persona: {user?.name}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-            Listing Operations & Performance
+            {user?.role === "OWNER" ? "Property Owner Operations" : "Listing Operations & Performance"}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
-            Create listings, manage client leads, and track inquiry status.
+            {user?.role === "OWNER"
+              ? "Post your housing properties with photo uploads, manage tenant/buyer inquiries, and track performance."
+              : "Create listings, manage client leads, and track inquiry status."}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/listings/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-brand-800 transition-colors"
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow transition-colors ${
+              user?.role === "OWNER"
+                ? "bg-amber-600 hover:bg-amber-700 shadow-amber-600/20"
+                : "bg-brand-700 hover:bg-brand-800 shadow-brand-700/20"
+            }`}
           >
             <PlusCircle className="h-4 w-4" />
-            <span>Create New Listing</span>
+            <span>{user?.role === "OWNER" ? "Post Housing (物件掲載)" : "Create New Listing"}</span>
           </Link>
         </div>
       </div>
