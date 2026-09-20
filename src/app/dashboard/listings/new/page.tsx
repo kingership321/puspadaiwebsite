@@ -57,28 +57,45 @@ export default function NewListingPage() {
     // Default fallback metropolises
     const fallbackCities: CityOption[] = [
       {
-        id: "city-ny",
-        name: "New York",
+        id: "city-tokyo",
+        name: "Tokyo (東京都)",
         areas: [
-          { id: "area-tribeca", name: "Tribeca" },
-          { id: "area-west-village", name: "West Village" },
-          { id: "area-dumbo", name: "DUMBO" },
+          { id: "area-shibuya", name: "Shibuya (渋谷区)" },
+          { id: "area-shinjuku", name: "Shinjuku (新宿区)" },
+          { id: "area-minato", name: "Minato (港区)" },
+          { id: "area-chiyoda", name: "Chiyoda (千代田区)" },
         ],
       },
       {
-        id: "city-london",
-        name: "London",
+        id: "city-osaka",
+        name: "Osaka (大阪府)",
         areas: [
-          { id: "area-kensington", name: "Kensington" },
-          { id: "area-marylebone", name: "Marylebone" },
+          { id: "area-umeda", name: "Kita / Umeda (北区・梅田)" },
+          { id: "area-namba", name: "Chuo / Namba (中央区・難波)" },
         ],
       },
       {
-        id: "city-seattle",
-        name: "Seattle",
+        id: "city-kyoto",
+        name: "Kyoto (京都府)",
         areas: [
-          { id: "area-capitol-hill", name: "Capitol Hill" },
-          { id: "area-ballard", name: "Ballard" },
+          { id: "area-nakagyo", name: "Nakagyo (中京区)" },
+          { id: "area-shimogyo", name: "Shimogyo (下京区)" },
+        ],
+      },
+      {
+        id: "city-yokohama",
+        name: "Yokohama (横浜市)",
+        areas: [
+          { id: "area-minatomirai", name: "Minato Mirai (みなとみらい)" },
+          { id: "area-kohoku", name: "Kohoku (港北区)" },
+        ],
+      },
+      {
+        id: "city-fukuoka",
+        name: "Fukuoka (福岡市)",
+        areas: [
+          { id: "area-tenjin", name: "Tenjin (天神)" },
+          { id: "area-hakata", name: "Hakata (博多)" },
         ],
       },
     ];

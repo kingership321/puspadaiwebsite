@@ -56,7 +56,7 @@ export default function AboutPage() {
       <div className="rounded-3xl bg-slate-900 p-8 sm:p-12 text-white text-center space-y-4">
         <h2 className="text-2xl sm:text-3xl font-black">Ready to discover your next home?</h2>
         <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-          Explore over 100+ active residences across New York, London, Seattle, Austin, and Chicago.
+          Explore over 100+ active residences across Tokyo, Osaka, Kyoto, Yokohama, and Fukuoka.
         </p>
         <div className="pt-2">
           <Link

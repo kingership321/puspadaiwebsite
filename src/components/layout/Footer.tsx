@@ -18,7 +18,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="max-w-sm text-sm text-slate-400 leading-relaxed">
-              HavenEstate is a modern, transparent real-estate marketplace connecting discerning seekers, owners, and licensed agents across premier global metropolises.
+              HavenEstate is a modern, transparent real-estate marketplace connecting discerning seekers, owners, and licensed agents across premier Japanese metropolises.
             </p>
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
@@ -42,11 +42,11 @@ export function Footer() {
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-200">Metropolises</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/city/new-york" className="hover:text-white transition-colors">New York City, NY</Link></li>
-              <li><Link href="/city/london" className="hover:text-white transition-colors">London, UK</Link></li>
-              <li><Link href="/city/seattle" className="hover:text-white transition-colors">Seattle, WA</Link></li>
-              <li><Link href="/city/austin" className="hover:text-white transition-colors">Austin, TX</Link></li>
-              <li><Link href="/city/chicago" className="hover:text-white transition-colors">Chicago, IL</Link></li>
+              <li><Link href="/city/tokyo" className="hover:text-white transition-colors">Tokyo (東京)</Link></li>
+              <li><Link href="/city/osaka" className="hover:text-white transition-colors">Osaka (大阪)</Link></li>
+              <li><Link href="/city/kyoto" className="hover:text-white transition-colors">Kyoto (京都)</Link></li>
+              <li><Link href="/city/yokohama" className="hover:text-white transition-colors">Yokohama (横浜)</Link></li>
+              <li><Link href="/city/fukuoka" className="hover:text-white transition-colors">Fukuoka (福岡)</Link></li>
             </ul>
           </div>
 

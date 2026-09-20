@@ -34,11 +34,11 @@ export default function ContactPage() {
             <div className="space-y-3 text-xs text-slate-600">
               <div className="flex items-start gap-3">
                 <MapPin className="h-4 w-4 text-brand-600 shrink-0 mt-0.5" />
-                <span>500 5th Avenue, Suite 4200<br />New York, NY 10110</span>
+                <span>Roppongi Hills Mori Tower 38F<br />Minato-ku, Tokyo 106-6138, Japan</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-brand-600 shrink-0" />
-                <span>+1 (800) 555-0199</span>
+                <span>+81 3-5555-0199</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-brand-600 shrink-0" />
