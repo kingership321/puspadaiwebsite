@@ -34,58 +34,70 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const property = await prisma.property.findUnique({
-    where: { slug: params.slug },
-    include: { city: true, neighborhood: true, images: { take: 1 } },
-  });
+  try {
+    const property = await prisma.property.findUnique({
+      where: { slug: params.slug },
+      include: { city: true, neighborhood: true, images: { take: 1 } },
+    });
 
-  if (!property) return { title: "Property Not Found — HavenEstate" };
+    if (!property) return { title: "Property Not Found — HavenSUUMO" };
 
-  return {
-    title: `${property.title} — HavenEstate`,
-    description: property.description.slice(0, 160),
-    openGraph: {
-      title: property.title,
-      description: property.description.slice(0, 160),
-      images: property.images?.[0]?.url ? [property.images[0].url] : [],
-    },
-  };
+    return {
+      title: `${property.titleJa || property.title} — HavenSUUMO`,
+      description: (property.descriptionJa || property.description).slice(0, 160),
+      openGraph: {
+        title: property.titleJa || property.title,
+        description: (property.descriptionJa || property.description).slice(0, 160),
+        images: property.images?.[0]?.url ? [property.images[0].url] : [],
+      },
+    };
+  } catch (error) {
+    return { title: "Property — HavenSUUMO" };
+  }
 }
 
 export default async function PropertyDetailPage({ params }: Props) {
-  const property = await prisma.property.findUnique({
-    where: { slug: params.slug },
-    include: {
-      city: true,
-      neighborhood: true,
-      agency: true,
-      agent: true,
-      images: { orderBy: { sortOrder: "asc" } },
-      amenities: { include: { amenity: true } },
-    },
-  });
+  let property = null;
+  let similar: any[] = [];
+
+  try {
+    property = await prisma.property.findUnique({
+      where: { slug: params.slug },
+      include: {
+        city: true,
+        neighborhood: true,
+        agency: true,
+        agent: true,
+        images: { orderBy: { sortOrder: "asc" } },
+        amenities: { include: { amenity: true } },
+      },
+    });
+
+    if (property) {
+      similar = await prisma.property.findMany({
+        where: {
+          id: { not: property.id },
+          cityId: property.cityId,
+          listingType: property.listingType,
+          status: "PUBLISHED",
+        },
+        take: 3,
+        include: {
+          city: true,
+          neighborhood: true,
+          agency: true,
+          images: { orderBy: { sortOrder: "asc" }, take: 2 },
+          amenities: { include: { amenity: true } },
+        },
+      });
+    }
+  } catch (error) {
+    console.error("PropertyDetailPage database error:", error);
+  }
 
   if (!property) {
     notFound();
   }
-
-  // Fetch similar properties
-  const similar = await prisma.property.findMany({
-    where: {
-      id: { not: property.id },
-      cityId: property.cityId,
-      listingType: property.listingType,
-      status: "PUBLISHED",
-    },
-    take: 3,
-    include: {
-      city: true,
-      neighborhood: true,
-      agency: true,
-      images: { orderBy: { sortOrder: "asc" }, take: 2 },
-      amenities: { include: { amenity: true } },
-    },
-  });
 
   const formattedProperty = {
     ...property,

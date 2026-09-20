@@ -20,35 +20,60 @@ import { PropertyDto } from "@/types";
 export const revalidate = 60; // Revalidate every 60s
 
 export default async function HomePage() {
-  // Fetch featured and recent listings
-  const [featuredProperties, cities, agencies, totalCount] = await Promise.all([
-    prisma.property.findMany({
-      where: { status: "PUBLISHED", featured: true },
-      take: 6,
-      orderBy: { publishedAt: "desc" },
-      include: {
-        city: true,
-        neighborhood: true,
-        agency: true,
-        agent: true,
-        images: { orderBy: { sortOrder: "asc" } },
-        amenities: { include: { amenity: true } },
-      },
-    }),
-    prisma.city.findMany({
-      take: 5,
-      include: {
-        _count: { select: { properties: true } },
-      },
-    }),
-    prisma.agency.findMany({
-      take: 4,
-      include: {
-        _count: { select: { properties: true, agents: true } },
-      },
-    }),
-    prisma.property.count({ where: { status: "PUBLISHED" } }),
-  ]);
+  let featuredProperties: any[] = [];
+  let cities: any[] = [];
+  let agencies: any[] = [];
+  let totalCount = 0;
+  let dbError = false;
+
+  try {
+    const [props, cList, aList, count] = await Promise.all([
+      prisma.property.findMany({
+        where: { status: "PUBLISHED", featured: true },
+        take: 6,
+        orderBy: { publishedAt: "desc" },
+        include: {
+          city: true,
+          neighborhood: true,
+          agency: true,
+          agent: true,
+          images: { orderBy: { sortOrder: "asc" } },
+          amenities: { include: { amenity: true } },
+        },
+      }),
+      prisma.city.findMany({
+        take: 5,
+        include: {
+          _count: { select: { properties: true } },
+        },
+      }),
+      prisma.agency.findMany({
+        take: 4,
+        include: {
+          _count: { select: { properties: true, agents: true } },
+        },
+      }),
+      prisma.property.count({ where: { status: "PUBLISHED" } }),
+    ]);
+
+    featuredProperties = props;
+    cities = cList;
+    agencies = aList;
+    totalCount = count;
+  } catch (error) {
+    console.error("HomePage Database connection error:", error);
+    dbError = true;
+  }
+
+  const fallbackCities = [
+    { id: "c1", name: "Tokyo", nameJa: "東京都", slug: "tokyo", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80", _count: { properties: 25 } },
+    { id: "c2", name: "Osaka", nameJa: "大阪府", slug: "osaka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&auto=format&fit=crop&q=80", _count: { properties: 15 } },
+    { id: "c3", name: "Kyoto", nameJa: "京都府", slug: "kyoto", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80", _count: { properties: 12 } },
+    { id: "c4", name: "Yokohama", nameJa: "横浜市", slug: "yokohama", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&auto=format&fit=crop&q=80", _count: { properties: 8 } },
+    { id: "c5", name: "Fukuoka", nameJa: "福岡市", slug: "fukuoka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?w=800&auto=format&fit=crop&q=80", _count: { properties: 5 } },
+  ];
+
+  const displayCities = cities.length > 0 ? cities : fallbackCities;
 
   const formattedProperties = featuredProperties.map((p: any) => ({
     ...p,
@@ -73,10 +98,19 @@ export default async function HomePage() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          {dbError && (
+            <div className="mx-auto max-w-xl mb-6 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-4 text-xs text-amber-200 backdrop-blur-md text-left">
+              <p className="font-bold text-amber-300">⚠️ Database Connection Setup Required</p>
+              <p className="mt-1 text-slate-300">
+                If you recently deployed to Vercel, please make sure you added <code className="rounded bg-black/40 px-1.5 py-0.5 text-amber-200 font-mono">DATABASE_URL</code> and <code className="rounded bg-black/40 px-1.5 py-0.5 text-amber-200 font-mono">DIRECT_URL</code> in your <strong>Vercel Project Settings &gt; Environment Variables</strong>, then Redeploy.
+              </p>
+            </div>
+          )}
+
           {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-brand-300 backdrop-blur-md mb-6 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-brand-400" />
-            <span>日本全国の主要都市・駅近の厳選物件 {totalCount}+ 件掲載 (Bilingual Marketplace)</span>
+            <span>日本全国の主要都市・駅近の厳選物件 {totalCount > 0 ? `${totalCount}+` : "60+"} 件掲載 (Bilingual Marketplace)</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
@@ -142,7 +176,7 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {cities.map((city) => (
+          {displayCities.map((city) => (
             <Link
               key={city.id}
               href={`/search?city=${city.slug}`}

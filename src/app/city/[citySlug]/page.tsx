@@ -12,25 +12,31 @@ interface Props {
 }
 
 export default async function CityLandingPage({ params }: Props) {
-  const city = await prisma.city.findUnique({
-    where: { slug: params.citySlug },
-    include: {
-      areas: true,
-      properties: {
-        where: { status: "PUBLISHED" },
-        take: 12,
-        orderBy: { publishedAt: "desc" },
-        include: {
-          city: true,
-          neighborhood: true,
-          agency: true,
-          agent: true,
-          images: { orderBy: { sortOrder: "asc" } },
-          amenities: { include: { amenity: true } },
+  let city = null;
+
+  try {
+    city = await prisma.city.findUnique({
+      where: { slug: params.citySlug },
+      include: {
+        areas: true,
+        properties: {
+          where: { status: "PUBLISHED" },
+          take: 12,
+          orderBy: { publishedAt: "desc" },
+          include: {
+            city: true,
+            neighborhood: true,
+            agency: true,
+            agent: true,
+            images: { orderBy: { sortOrder: "asc" } },
+            amenities: { include: { amenity: true } },
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("CityLandingPage database error:", error);
+  }
 
   if (!city) notFound();
 
