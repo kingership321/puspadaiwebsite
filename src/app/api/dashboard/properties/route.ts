@@ -13,10 +13,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       title,
+      titleJa,
       listingType,
       propertyType,
       price,
       deposit,
+      keyMoney,
+      managementFee,
+      layout,
+      structure,
+      stationName,
+      stationLine,
+      walkMinutes,
       bedrooms,
       bathrooms,
       area,
@@ -24,6 +32,7 @@ export async function POST(request: NextRequest) {
       cityId,
       areaId,
       description,
+      descriptionJa,
       furnished,
       parking,
       imageUrls = [],
@@ -34,8 +43,8 @@ export async function POST(request: NextRequest) {
 
     // Resolve city to get coordinates fallback
     const city = await prisma.city.findUnique({ where: { id: cityId } });
-    const lat = city ? city.latitude + 0.005 : 40.7128;
-    const lng = city ? city.longitude + 0.005 : -74.0060;
+    const lat = city ? city.latitude + 0.005 : 35.6762;
+    const lng = city ? city.longitude + 0.005 : 139.6503;
 
     // Resolve agent if user is an agent
     const agent = await prisma.agent.findFirst();
@@ -46,12 +55,21 @@ export async function POST(request: NextRequest) {
         listingType: listingType || "RENT",
         propertyType: propertyType || "APARTMENT",
         title,
+        titleJa: titleJa || undefined,
         description: description || "Modern high-finish property in a premier neighborhood.",
+        descriptionJa: descriptionJa || undefined,
         price: parseFloat(price),
         deposit: deposit ? parseFloat(deposit) : null,
+        keyMoney: keyMoney ? parseFloat(keyMoney) : null,
+        managementFee: managementFee ? parseFloat(managementFee) : null,
+        layout: layout || undefined,
+        structure: structure || "RC",
+        stationName: stationName || undefined,
+        stationLine: stationLine || undefined,
+        walkMinutes: walkMinutes ? parseInt(walkMinutes) : undefined,
         bedrooms: parseInt(bedrooms) || 1,
         bathrooms: parseFloat(bathrooms) || 1,
-        area: parseFloat(area) || 800,
+        area: parseFloat(area) || 30,
         address,
         cityId,
         areaId,
