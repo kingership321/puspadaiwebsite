@@ -6,7 +6,7 @@ export function TokyoSkylineLeft() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none select-none absolute left-0 top-2 bottom-0 w-[180px] sm:w-[240px] md:w-[280px] lg:w-[340px] xl:w-[400px] hidden sm:block z-0 overflow-hidden"
+      className="pointer-events-none select-none absolute left-0 top-2 bottom-0 w-[180px] md:w-[240px] lg:w-[300px] xl:w-[360px] hidden md:block z-0 overflow-hidden"
     >
       <svg
         viewBox="0 0 400 500"
@@ -134,7 +134,7 @@ export function TokyoSkylineRight() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none select-none absolute right-0 top-2 bottom-0 w-[180px] sm:w-[240px] md:w-[280px] lg:w-[340px] xl:w-[400px] hidden sm:block z-0 overflow-hidden"
+      className="pointer-events-none select-none absolute right-0 top-2 bottom-0 w-[180px] md:w-[240px] lg:w-[300px] xl:w-[360px] hidden md:block z-0 overflow-hidden"
     >
       <svg
         viewBox="0 0 400 500"

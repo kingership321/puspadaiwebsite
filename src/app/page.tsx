@@ -144,57 +144,57 @@ export default async function HomePage() {
       </div>
 
       {/* 2. Emotional Lifestyle Hero Section */}
-      <section className="relative overflow-hidden pt-8 sm:pt-12 pb-14 sm:pb-16 border-b border-slate-200/70">
+      <section className="relative overflow-hidden pt-4 sm:pt-6 pb-10 sm:pb-12 border-b border-slate-200/70">
         {/* Tokyo City Skyscraper Silhouettes (Left & Right Hero Flanks) */}
         <TokyoSkylineBackdrop />
 
         {/* Soft Decorative Gradient Blurs */}
-        <div className="absolute top-0 left-1/4 -z-10 h-72 w-72 rounded-full bg-rose-200/35 blur-3xl" />
-        <div className="absolute top-10 right-1/4 -z-10 h-80 w-80 rounded-full bg-amber-200/30 blur-3xl" />
-        <div className="absolute bottom-0 right-10 -z-10 h-64 w-64 rounded-full bg-emerald-200/30 blur-3xl" />
+        <div className="absolute top-0 left-1/4 -z-10 h-64 w-64 rounded-full bg-rose-200/25 blur-3xl" />
+        <div className="absolute top-10 right-1/4 -z-10 h-72 w-72 rounded-full bg-amber-200/20 blur-3xl" />
+        <div className="absolute bottom-0 right-10 -z-10 h-56 w-56 rounded-full bg-emerald-200/20 blur-3xl" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-7">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-5">
           {/* Main Hero Copywriting */}
-          <div className="text-center max-w-3xl mx-auto space-y-3.5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/80 bg-white/95 px-4 py-1 text-xs font-black text-rose-600 shadow-2xs">
-              <Sparkles className="h-3.5 w-3.5 text-rose-500" />
+          <div className="text-center max-w-3xl mx-auto space-y-2 sm:space-y-2.5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-200/80 bg-white/95 px-3 py-0.5 text-[11px] font-black text-rose-600 shadow-2xs">
+              <Sparkles className="h-3 w-3 text-rose-500" />
               <span>いま若者に選ばれている住まい探しポータル</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.2]">
-              もっと私らしく、自由に暮らす。<br />
-              <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent">
-                写真とリアルな声で探す、お気に入りの部屋。
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] font-black tracking-tight text-slate-900 leading-snug sm:leading-tight">
+              もっと私らしく、自由に暮らす。<br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent sm:ml-2">
+                写真とリアルな声で探すお部屋
               </span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
-              東京23区・大阪・京都・福岡の賃貸＆購入マンション。敷金礼金0円、駅徒歩5分、カフェ風リノベ、推し活ルーム。LINEでサクッと相談して、来店不要でスマートに新生活を始めよう。
+            <p className="text-xs sm:text-[13px] text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
+              敷金礼金0円・駅近5分・デザイナーズ・推し活ルーム。LINEでサクッと相談して、来店不要でスマートに新生活を始めよう。
             </p>
 
             {/* Psychological Safety Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1 text-[11px] sm:text-xs font-bold text-slate-700">
-              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                <span>しつこい営業電話一切ナシ</span>
+            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 pt-0.5 text-[10.5px] sm:text-[11px] font-bold text-slate-600">
+              <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
+                <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                <span>営業電話ナシ</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
-                <MessageCircle className="h-3.5 w-3.5 text-[#06C755]" />
-                <span>LINEチャットだけで完結</span>
+              <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
+                <MessageCircle className="h-3 w-3 text-[#06C755]" />
+                <span>LINEで完結</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
-                <Coins className="h-3.5 w-3.5 text-amber-600" />
-                <span>初期費用の明朗会計</span>
+              <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
+                <Coins className="h-3 w-3 text-amber-600" />
+                <span>明朗会計</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
-                <Smartphone className="h-3.5 w-3.5 text-blue-600" />
-                <span>来店不要オンライン内見</span>
+              <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
+                <Smartphone className="h-3 w-3 text-blue-600" />
+                <span>オンライン内見可</span>
               </span>
             </div>
           </div>
 
           {/* Search Box */}
-          <div className="pt-2">
+          <div className="pt-0 sm:pt-1">
             <JapanesePortalSearch />
           </div>
 
