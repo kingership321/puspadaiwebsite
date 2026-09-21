@@ -136,23 +136,23 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
         </div>
       </div>
 
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-1.5 sm:gap-2 px-3 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Brand Logo */}
-        <div className="flex items-center gap-6 lg:gap-8">
-          <Link href="/" className="flex items-center gap-2.5 text-slate-900 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00a854] to-[#10b981] text-white shadow-md shadow-[#00a854]/20 group-hover:scale-105 transition-transform">
+        <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+          <Link href="/" className="flex items-center gap-2 text-slate-900 group shrink-0 min-w-0">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00a854] to-[#10b981] text-white shadow-md shadow-[#00a854]/20 group-hover:scale-105 transition-transform shrink-0">
               <Building2 className="h-5 w-5" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1">
-                <span className="text-xl font-black tracking-tight text-slate-900 leading-none">
+                <span className="text-lg sm:text-xl font-black tracking-tight text-slate-900 leading-none">
                   Haven<span className="text-[#00a854]">SUUMO</span>
                 </span>
-                <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2">
+                <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2 shrink-0">
                   公式
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-slate-500 mt-0.5">
+              <span className="text-[10px] font-bold text-slate-500 mt-0.5 hidden sm:block truncate">
                 {lang === "ja" ? "暮らしを楽しむ、お部屋探しポータル" : "Next-Gen Japanese Lifestyle Housing"}
               </span>
             </div>
@@ -180,13 +180,13 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
         </div>
 
         {/* Right Action Icons & Auth Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           {/* Direct LINE Consultation Quick Button */}
           <a
             href="https://line.me/R/ti/p/@havensuumo"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white px-3 py-1.5 text-xs font-black shadow-xs transition-all hover:scale-[1.02]"
+            className="hidden md:flex items-center gap-1.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white px-3 py-1.5 text-xs font-black shadow-xs transition-all hover:scale-[1.02]"
             title="LINEで無料相談・空室確認"
           >
             <span className="text-[10px] font-black bg-white/25 px-1 rounded-sm">LINE</span>
@@ -196,10 +196,10 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
           {/* Bilingual Language Switcher */}
           <button
             onClick={toggleLang}
-            className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all active:scale-95"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-2 sm:px-2.5 py-1 sm:py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all active:scale-95"
             title="Switch Language / 言語切替"
           >
-            <Globe className="h-3.5 w-3.5 text-brand-600" />
+            <Globe className="h-3.5 w-3.5 text-brand-600 shrink-0" />
             <span className={lang === "ja" ? "text-brand-700 font-bold" : "text-slate-400"}>JP</span>
             <span className="text-slate-300">|</span>
             <span className={lang === "en" ? "text-brand-700 font-bold" : "text-slate-400"}>EN</span>
@@ -218,10 +218,10 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
           {/* Favorites link */}
           <Link
             href="/account/saved"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-rose-600 transition-colors"
             title="Saved Properties"
           >
-            <Heart className="h-5 w-5" />
+            <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
             {favCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow">
                 {favCount}
@@ -229,9 +229,9 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
             )}
           </Link>
 
-          {/* Auth State: Logged In vs Logged Out */}
+          {/* Auth State: Logged In vs Logged Out (Hidden on mobile top bar, accessible in hamburger menu) */}
           {isLoggedOut ? (
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/login"
                 className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
@@ -247,8 +247,8 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
             </div>
           ) : (
             <>
-              {/* User Account / Persona Dropdown */}
-              <div className="relative">
+              {/* User Account / Persona Dropdown (shown on sm+ screens) */}
+              <div className="relative hidden sm:block">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-all focus:outline-none"
@@ -415,7 +415,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
           {/* Mobile menu hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 md:hidden"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 md:hidden"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -443,27 +443,65 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-700"
+                  className="text-center rounded-xl border border-slate-200 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   Log In
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center rounded-xl bg-brand-600 py-2 text-xs font-bold text-white shadow-sm"
+                  className="text-center rounded-xl bg-brand-600 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-brand-700"
                 >
                   Sign Up
                 </Link>
               </div>
             ) : (
               <>
+                {/* Mobile User Role Switcher Card */}
+                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-slate-900 truncate">
+                        {currentUser?.name || "Marketplace User"}
+                      </p>
+                      <span className={`inline-block mt-0.5 rounded px-1.5 py-0.2 text-[9px] font-black uppercase tracking-wider ${
+                        currentRole === "OWNER"
+                          ? "bg-amber-100 text-amber-800"
+                          : currentRole === "ADMIN"
+                          ? "bg-purple-100 text-purple-800"
+                          : currentRole === "AGENT"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-blue-100 text-blue-800"
+                      }`}>
+                        {currentRole} ROLE
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 pt-1 border-t border-slate-200/80">
+                    {(["SEEKER", "OWNER", "AGENT", "ADMIN"] as UserRole[]).map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => handleSwitchRole(r)}
+                        className={`flex items-center justify-between px-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                          currentRole === r
+                            ? "bg-white font-bold text-brand-700 shadow-2xs"
+                            : "text-slate-600 hover:bg-white"
+                        }`}
+                      >
+                        <span className="capitalize">{r.toLowerCase()}</span>
+                        {currentRole === r && <CheckCircle2 className="h-3 w-3 text-brand-600 ml-1" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <Link
                   href="/account"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                   <User className="h-4 w-4 text-slate-500" />
-                  My Account
+                  My Account (マイページ)
                 </Link>
 
                 {(currentRole === "OWNER" || currentRole === "AGENT") && (

@@ -49,10 +49,10 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" className={`${inter.variable} ${notoSansJP.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#FAF9F5] text-slate-900 font-sans pb-16 md:pb-0 selection:bg-rose-500 selection:text-white">
+      <body className="min-h-screen flex flex-col bg-[#FAF9F5] text-slate-900 font-sans pb-16 md:pb-0 selection:bg-rose-500 selection:text-white w-full max-w-full overflow-x-hidden">
         <LanguageProvider>
           <AppHeader initialRole={user?.role} />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
           <Footer />
           <MobileNav />
           <LineConsultationWidget />

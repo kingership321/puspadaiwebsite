@@ -4,7 +4,7 @@ import { Building2, ShieldCheck, Mail, Phone, MapPin, Compass, CheckCircle2 } fr
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-slate-950 text-slate-400">
+    <footer className="border-t border-slate-200 bg-slate-950 text-slate-400 w-full overflow-hidden">
       {/* Association Badges & Trust Banner */}
       <div className="border-b border-slate-800/80 bg-slate-900/60 py-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-400">

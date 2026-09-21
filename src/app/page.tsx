@@ -116,11 +116,11 @@ export default async function HomePage() {
   const formattedNearStation = formatList(nearStationProperties.length > 0 ? nearStationProperties : featuredProperties.slice(2, 6));
 
   return (
-    <div className="bg-[#FAF9F5] min-h-screen text-slate-800 pb-20">
+    <div className="bg-[#FAF9F5] min-h-screen text-slate-800 pb-20 w-full max-w-full overflow-x-hidden">
       {/* 1. Youth Peace-of-Mind Announcement Ribbon */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-xs py-2 px-4 shadow-2xs">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-xs py-2 px-3 sm:px-4 shadow-2xs w-full overflow-hidden">
         <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
             <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0">
               新生活応援 2026
             </span>
@@ -128,7 +128,7 @@ export default async function HomePage() {
               敷金・礼金0円＆駅近マンション多数！LINEチャットで内見予約・見積もり相談受付中
             </span>
           </div>
-          <div className="flex items-center gap-3 text-emerald-100 text-[11px] whitespace-nowrap shrink-0 font-bold">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold">
             <span className="flex items-center gap-1 text-white">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-200" />
               <span>おとり物件ゼロ</span>
@@ -229,7 +229,7 @@ export default async function HomePage() {
       </section>
 
       {/* 3. Main Body Content Container */}
-      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12 sm:space-y-16">
+      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12 sm:space-y-16 w-full max-w-full overflow-x-hidden">
         {/* SECTION A: Instagram-Style Youth Town Stories */}
         <YouthAreaStories />
 

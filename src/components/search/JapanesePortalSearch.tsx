@@ -156,7 +156,7 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("train")}
-          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all min-w-0 ${
             activeTab === "train"
               ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
               : "text-slate-600 hover:bg-slate-100/70"
@@ -169,7 +169,7 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("area")}
-          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all min-w-0 ${
             activeTab === "area"
               ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
               : "text-slate-600 hover:bg-slate-100/70"
@@ -182,7 +182,7 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("theme")}
-          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all min-w-0 ${
             activeTab === "theme"
               ? "bg-white text-rose-600 font-black shadow-2xs border-b-2 sm:border-b-2 border-rose-500"
               : "text-slate-600 hover:bg-slate-100/70"
@@ -195,7 +195,7 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("keyword")}
-          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all min-w-0 ${
             activeTab === "keyword"
               ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
               : "text-slate-600 hover:bg-slate-100/70"

@@ -73,24 +73,24 @@ const YOUTH_AREAS: AreaStory[] = [
 
 export function YouthAreaStories() {
   return (
-    <div className="w-full space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white shadow-2xs">
+    <div className="w-full max-w-full min-w-0 space-y-3 overflow-hidden">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white shadow-2xs">
             <Sparkles className="h-3.5 w-3.5" />
           </div>
-          <h3 className="text-sm sm:text-base font-black text-slate-900">
+          <h3 className="text-xs sm:text-base font-black text-slate-900 truncate">
             20代がリアルに住みたい！注目の人気タウン STORIES
           </h3>
         </div>
-        <span className="text-[11px] font-bold text-slate-400">
+        <span className="text-[11px] font-bold text-slate-400 shrink-0 hidden sm:inline">
           横スクロールでチェック →
         </span>
       </div>
 
       {/* Horizontal Story Reel */}
       <div
-        className="flex items-center gap-3.5 sm:gap-6 overflow-x-auto pb-2.5 pt-1 no-scrollbar scroll-smooth touch-pan-x"
+        className="flex items-center gap-3.5 sm:gap-6 overflow-x-auto pb-2.5 pt-1 no-scrollbar scroll-smooth touch-pan-x w-full max-w-full"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {YOUTH_AREAS.map((area) => (
