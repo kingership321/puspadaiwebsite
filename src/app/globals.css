@@ -6,13 +6,59 @@
   :root {
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-    --brand: 174 77% 26%;
+    --brand: 142 71% 29%;
   }
 
   body {
-    @apply bg-[#f8fafc] text-slate-900 antialiased selection:bg-brand-500 selection:text-white;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-[#f4f6f8] text-slate-900 antialiased selection:bg-brand-600 selection:text-white;
+    font-feature-settings: "palt" 1, "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
+}
+
+/* Custom Japanese Portal Table Styling (物件概要・スペックシート) */
+.table-japanese-specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.table-japanese-specs th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+  width: 22%;
+}
+
+.table-japanese-specs td {
+  background-color: #ffffff;
+  color: #1e293b;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+/* Japanese Real Estate Badges */
+.badge-suumo-primary {
+  background-color: #15803d;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.badge-tag-japanese {
+  background-color: #f1f5f9;
+  color: #334155;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
 }
 
 /* Custom scrollbars */

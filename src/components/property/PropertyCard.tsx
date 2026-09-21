@@ -2,22 +2,19 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Heart,
-  Bed,
-  Bath,
-  Maximize,
-  MapPin,
-  Building,
-  Check,
   Scale,
   Sparkles,
   Train,
+  MapPin,
+  Building,
+  ShieldCheck,
+  ChevronRight,
+  Maximize2,
 } from "lucide-react";
 import { PropertyDto } from "@/types";
-import { formatCurrency, formatJapanesePrice, formatPriceCompact } from "@/lib/utils";
-import { Badge } from "@/components/ui/Badge";
+import { formatJapanesePrice } from "@/lib/utils";
 import { useLanguage } from "@/lib/LanguageContext";
 
 interface PropertyCardProps {
@@ -39,14 +36,20 @@ export function PropertyCard({
   viewMode = "grid",
   priority = false,
 }: PropertyCardProps) {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [favorite, setFavorite] = useState(isFavorite);
   const [compared, setCompared] = useState(isCompared);
 
-  const images = property.images && property.images.length > 0
-    ? property.images
-    : [{ url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=80", alt: property.title }];
+  const images =
+    property.images && property.images.length > 0
+      ? property.images
+      : [
+          {
+            url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=80",
+            alt: property.title,
+          },
+        ];
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,17 +70,23 @@ export function PropertyCard({
   };
 
   const isListLayout = viewMode === "list";
+  const isRent = property.listingType === "RENT";
+  const tsubo = (property.area * 0.3025).toFixed(1);
+
+  // Deposit & Key money badges
+  const isShikikinZero = !property.deposit || property.deposit === 0;
+  const isReikinZero = !property.keyMoney || property.keyMoney === 0;
 
   return (
     <div
-      className={`group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl ${
+      className={`group relative flex flex-col rounded-xl border border-slate-200 bg-white transition-all duration-200 hover:border-brand-600 hover:shadow-lg ${
         isListLayout ? "md:flex-row md:items-stretch" : ""
       }`}
     >
-      {/* Image Media Container */}
+      {/* 1. Media Area */}
       <div
         className={`relative overflow-hidden bg-slate-100 ${
-          isListLayout ? "md:w-2/5 aspect-[4/3] md:aspect-auto" : "aspect-[16/10] w-full"
+          isListLayout ? "md:w-5/12 aspect-[16/10] md:aspect-auto" : "aspect-[16/10] w-full"
         }`}
       >
         <Link href={`/property/${property.slug}`} className="block h-full w-full">
@@ -85,180 +94,173 @@ export function PropertyCard({
             src={images[activeImageIdx]?.url || images[0].url}
             alt={property.title}
             loading={priority ? "eager" : "lazy"}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         </Link>
 
-        {/* Gradient overlay for badges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
-
-        {/* Badges Top-Left */}
-        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 z-10">
-          <Badge
-            variant={property.listingType === "RENT" ? "brand" : "neutral"}
-            className="bg-white/95 text-slate-900 border-none shadow-sm backdrop-blur-md font-bold px-2.5 py-1"
+        {/* Top Badges */}
+        <div className="absolute top-2.5 left-2.5 flex flex-wrap items-center gap-1.5 z-10">
+          <span
+            className={`px-2 py-0.5 text-[11px] font-black tracking-wider uppercase rounded ${
+              isRent ? "bg-brand-700 text-white shadow-sm" : "bg-blue-800 text-white shadow-sm"
+            }`}
           >
-            {property.listingType === "RENT"
-              ? lang === "ja" ? "賃貸" : "FOR RENT"
-              : lang === "ja" ? "売買" : "FOR SALE"}
-          </Badge>
+            {isRent ? (lang === "ja" ? "賃貸" : "FOR RENT") : lang === "ja" ? "売買" : "FOR SALE"}
+          </span>
+
           {property.layout && (
-            <Badge
-              variant="neutral"
-              className="bg-slate-900/80 text-white border-none shadow-sm font-bold px-2 py-0.5 text-[11px]"
-            >
+            <span className="bg-slate-900/90 text-white px-2 py-0.5 text-[11px] font-black rounded backdrop-blur-sm">
               {property.layout}
-            </Badge>
+            </span>
           )}
+
+          {isShikikinZero && isReikinZero && isRent && (
+            <span className="bg-amber-500 text-white px-2 py-0.5 text-[10px] font-black rounded shadow-sm">
+              敷礼0円
+            </span>
+          )}
+
           {property.featured && (
-            <Badge
-              variant="warning"
-              className="bg-amber-500 text-white border-none shadow-sm font-bold flex items-center gap-1"
-            >
-              <Sparkles className="h-3 w-3" />
-              {lang === "ja" ? "おすすめ" : "Featured"}
-            </Badge>
+            <span className="bg-rose-600 text-white px-2 py-0.5 text-[10px] font-black rounded shadow-sm flex items-center gap-0.5">
+              <Sparkles className="h-2.5 w-2.5" />
+              <span>注目</span>
+            </span>
           )}
         </div>
 
-        {/* Favorite & Compare Action Buttons Top-Right */}
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+        {/* Action Buttons Top-Right */}
+        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
           <button
+            type="button"
             onClick={handleCompareClick}
-            aria-label={compared ? "Remove from comparison" : "Add to comparison"}
-            title="Compare property"
-            className={`flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
+            aria-label="Compare property"
+            title="比較リストに追加"
+            className={`flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
               compared
-                ? "bg-brand-600 text-white"
-                : "bg-white/80 text-slate-700 hover:bg-white hover:text-brand-600"
+                ? "bg-brand-700 text-white"
+                : "bg-white/90 text-slate-700 hover:bg-white hover:text-brand-700"
             }`}
           >
-            <Scale className="h-4 w-4" />
+            <Scale className="h-3.5 w-3.5" />
           </button>
 
           <button
+            type="button"
             onClick={handleFavClick}
-            aria-label={favorite ? "Remove from favorites" : "Save to favorites"}
-            title="Save favorite"
-            className={`flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
+            aria-label="Save to favorites"
+            title="お気に入りに保存"
+            className={`flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
               favorite
                 ? "bg-rose-500 text-white"
-                : "bg-white/80 text-slate-700 hover:bg-white hover:text-rose-500"
+                : "bg-white/90 text-slate-700 hover:bg-white hover:text-rose-500"
             }`}
           >
-            <Heart className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
+            <Heart className={`h-3.5 w-3.5 ${favorite ? "fill-current" : ""}`} />
           </button>
         </div>
 
-        {/* Multiple image dots */}
-        {images.length > 1 && (
-          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 z-10 px-2 py-1 rounded-full bg-black/40 backdrop-blur-sm">
-            {images.slice(0, 5).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActiveImageIdx(idx);
-                }}
-                className={`h-1.5 rounded-full transition-all ${
-                  activeImageIdx === idx ? "w-4 bg-white" : "w-1.5 bg-white/50"
-                }`}
-                aria-label={`View image ${idx + 1}`}
-              />
-            ))}
-          </div>
-        )}
+        {/* Photo Count Tag */}
+        <div className="absolute bottom-2 right-2 rounded bg-black/65 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+          {activeImageIdx + 1} / {images.length}
+        </div>
       </div>
 
-      {/* Property Details */}
-      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
-        <div>
-          {/* Price Header */}
-          <div className="flex items-baseline justify-between gap-2">
+      {/* 2. Structured Real Estate Information Body */}
+      <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4">
+        <div className="space-y-2">
+          {/* Price Strip */}
+          <div className="flex items-baseline justify-between border-b border-slate-100 pb-2">
             <div className="flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                {formatJapanesePrice(property.price, property.listingType === "RENT", lang)}
+              <span className="text-2xl font-black text-brand-800 tracking-tight">
+                {formatJapanesePrice(property.price, isRent, lang)}
               </span>
-              {property.managementFee && (
+              {property.managementFee ? (
                 <span className="text-xs font-semibold text-slate-500">
-                  ({lang === "ja" ? "管理費: " : "Fee: "}¥{property.managementFee.toLocaleString()})
+                  {lang === "ja" ? "管理費: " : "Fee: "}¥{property.managementFee.toLocaleString()}
                 </span>
-              )}
+              ) : isRent ? (
+                <span className="text-xs font-semibold text-slate-400">管理費込</span>
+              ) : null}
             </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2 py-0.5 rounded-md">
-              {property.layout || property.propertyType}
-            </span>
+
+            {isRent && (
+              <div className="text-[11px] font-bold text-slate-500">
+                敷 {isShikikinZero ? "なし" : `${(property.deposit! / property.price).toFixed(0)}ヶ月`} / 礼{" "}
+                {isReikinZero ? "なし" : `${(property.keyMoney! / property.price).toFixed(0)}ヶ月`}
+              </div>
+            )}
           </div>
 
-          {/* Title Link */}
-          <Link href={`/property/${property.slug}`} className="block mt-2 group-hover:text-brand-700 transition-colors">
-            <h4 className="text-base font-bold text-slate-900 line-clamp-1">
+          {/* Title */}
+          <Link href={`/property/${property.slug}`} className="block group-hover:text-brand-800 transition-colors">
+            <h4 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1">
               {lang === "ja" && property.titleJa ? property.titleJa : property.title}
             </h4>
           </Link>
 
-          {/* Transit & Station Walk */}
+          {/* Transit & Station Walk (High Priority for Japanese Market) */}
           {property.stationName && (
-            <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
-              <Train className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-              <span className="line-clamp-1">
-                {property.stationName}
-                {property.walkMinutes ? (lang === "ja" ? ` 徒歩${property.walkMinutes}分` : ` (${property.walkMinutes} min walk)`) : ""}
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+              <Train className="h-3.5 w-3.5 text-brand-700 shrink-0" />
+              <span className="truncate">
+                {property.stationLine ? `${property.stationLine} ` : ""}
+                「{property.stationName}」駅
+                {property.walkMinutes ? ` 徒歩${property.walkMinutes}分` : ""}
               </span>
             </div>
           )}
 
           {/* Location */}
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
-            <MapPin className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-            <span className="line-clamp-1">
-              {property.address}, {lang === "ja" ? (property.neighborhood?.nameJa || property.neighborhood?.name || property.city?.nameJa || property.city?.name) : (property.neighborhood?.name || property.city?.name)}
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+            <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+            <span className="truncate">
+              {property.address} ({property.neighborhood?.nameJa || property.neighborhood?.name || property.city?.name})
             </span>
           </div>
 
-          {/* Facts Strip (Layout, Structure, Area) */}
-          <div className="mt-3.5 flex items-center gap-3 border-t border-slate-100 pt-3 text-xs font-semibold text-slate-700">
-            <div className="flex items-center gap-1">
-              <Bed className="h-4 w-4 text-slate-500" />
-              <span>{property.layout || (property.bedrooms === 0 ? "1R / Studio" : `${property.bedrooms}部屋`)}</span>
+          {/* Structured Specs Grid */}
+          <div className="grid grid-cols-3 gap-1.5 rounded-lg bg-slate-50/80 p-2 text-[11px] font-semibold text-slate-700 border border-slate-100">
+            <div>
+              <span className="text-[10px] text-slate-400 block font-normal">間取り</span>
+              <span className="font-bold text-slate-900">{property.layout || "ワンルーム"}</span>
             </div>
-            <span className="text-slate-300">•</span>
-            <div className="flex items-center gap-1">
-              <Maximize className="h-4 w-4 text-slate-500" />
-              <span>{property.area} ㎡</span>
+            <div>
+              <span className="text-[10px] text-slate-400 block font-normal">専有面積</span>
+              <span className="font-bold text-slate-900">
+                {property.area}㎡ <span className="text-[9px] text-slate-500 font-normal">({tsubo}坪)</span>
+              </span>
             </div>
-            {property.structure && (
-              <>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-500">{property.structure}</span>
-              </>
-            )}
+            <div>
+              <span className="text-[10px] text-slate-400 block font-normal">建物構造</span>
+              <span className="font-bold text-slate-900">{property.structure || "RC造"}</span>
+            </div>
+          </div>
+
+          {/* Japanese Amenity Badges */}
+          <div className="flex flex-wrap gap-1 pt-0.5">
+            <span className="badge-tag-japanese">バス・トイレ別</span>
+            <span className="badge-tag-japanese">2階以上</span>
+            <span className="badge-tag-japanese">オートロック</span>
+            <span className="badge-tag-japanese">エアコン</span>
+            {property.parking && <span className="badge-tag-japanese">駐車場有</span>}
           </div>
         </div>
 
-        {/* Agency / Agent Footer */}
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-600">
-          <div className="flex items-center gap-2">
-            {property.agency?.logoUrl ? (
-              <img
-                src={property.agency.logoUrl}
-                alt={property.agency.name}
-                className="h-5 w-5 rounded-full object-cover"
-              />
-            ) : (
-              <Building className="h-4 w-4 text-slate-600" />
-            )}
-            <span className="font-medium text-slate-600 line-clamp-1 max-w-[150px]">
-              {property.agency?.name || "Licensed Brokerage"}
+        {/* 3. Broker & Action Row */}
+        <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2 text-xs">
+          <div className="flex items-center gap-1 text-[11px] text-slate-500">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+            <span className="truncate max-w-[130px] font-medium">
+              {property.agency?.name || "専属仲介・宅建士確認済"}
             </span>
           </div>
 
           <Link
             href={`/property/${property.slug}`}
-            className="font-bold text-brand-700 hover:text-brand-800 hover:underline"
+            className="inline-flex items-center gap-1 rounded-md bg-brand-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-brand-800 transition-colors"
           >
-            {lang === "ja" ? "詳細を見る →" : "View Details →"}
+            <span>詳細を見る</span>
+            <ChevronRight className="h-3 w-3" />
           </Link>
         </div>
       </div>

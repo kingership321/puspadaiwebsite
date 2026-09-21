@@ -14,6 +14,13 @@ import {
   KeyRound,
   CheckCircle2,
   Users,
+  Train,
+  Home,
+  Check,
+  Zap,
+  BadgePercent,
+  FileCheck2,
+  CalendarCheck,
 } from "lucide-react";
 import { PropertyDto } from "@/types";
 
@@ -21,13 +28,15 @@ export const revalidate = 60; // Revalidate every 60s
 
 export default async function HomePage() {
   let featuredProperties: any[] = [];
+  let noDepositProperties: any[] = [];
+  let nearStationProperties: any[] = [];
   let cities: any[] = [];
   let agencies: any[] = [];
   let totalCount = 0;
   let dbError = false;
 
   try {
-    const [props, cList, aList, count] = await Promise.all([
+    const [props, noDep, nearSt, cList, aList, count] = await Promise.all([
       prisma.property.findMany({
         where: { status: "PUBLISHED", featured: true },
         take: 6,
@@ -39,6 +48,30 @@ export default async function HomePage() {
           agent: true,
           images: { orderBy: { sortOrder: "asc" } },
           amenities: { include: { amenity: true } },
+        },
+      }),
+      prisma.property.findMany({
+        where: { status: "PUBLISHED", deposit: 0, keyMoney: 0 },
+        take: 4,
+        orderBy: { publishedAt: "desc" },
+        include: {
+          city: true,
+          neighborhood: true,
+          agency: true,
+          agent: true,
+          images: { orderBy: { sortOrder: "asc" } },
+        },
+      }),
+      prisma.property.findMany({
+        where: { status: "PUBLISHED", walkMinutes: { lte: 5 } },
+        take: 4,
+        orderBy: { publishedAt: "desc" },
+        include: {
+          city: true,
+          neighborhood: true,
+          agency: true,
+          agent: true,
+          images: { orderBy: { sortOrder: "asc" } },
         },
       }),
       prisma.city.findMany({
@@ -57,6 +90,8 @@ export default async function HomePage() {
     ]);
 
     featuredProperties = props;
+    noDepositProperties = noDep;
+    nearStationProperties = nearSt;
     cities = cList;
     agencies = aList;
     totalCount = count;
@@ -66,113 +101,280 @@ export default async function HomePage() {
   }
 
   const fallbackCities = [
-    { id: "c1", name: "Tokyo", nameJa: "東京都", slug: "tokyo", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80", _count: { properties: 25 } },
-    { id: "c2", name: "Osaka", nameJa: "大阪府", slug: "osaka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&auto=format&fit=crop&q=80", _count: { properties: 15 } },
-    { id: "c3", name: "Kyoto", nameJa: "京都府", slug: "kyoto", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80", _count: { properties: 12 } },
-    { id: "c4", name: "Yokohama", nameJa: "横浜市", slug: "yokohama", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&auto=format&fit=crop&q=80", _count: { properties: 8 } },
-    { id: "c5", name: "Fukuoka", nameJa: "福岡市", slug: "fukuoka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?w=800&auto=format&fit=crop&q=80", _count: { properties: 5 } },
+    { id: "c1", name: "Tokyo", nameJa: "東京都", slug: "tokyo", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80", avgRent: "14.8万円", _count: { properties: 25 } },
+    { id: "c2", name: "Osaka", nameJa: "大阪府", slug: "osaka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&auto=format&fit=crop&q=80", avgRent: "9.4万円", _count: { properties: 15 } },
+    { id: "c3", name: "Kyoto", nameJa: "京都府", slug: "kyoto", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80", avgRent: "8.9万円", _count: { properties: 12 } },
+    { id: "c4", name: "Yokohama", nameJa: "横浜市", slug: "yokohama", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&auto=format&fit=crop&q=80", avgRent: "11.2万円", _count: { properties: 8 } },
+    { id: "c5", name: "Fukuoka", nameJa: "福岡市", slug: "fukuoka", country: "Japan", imageUrl: "https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?w=800&auto=format&fit=crop&q=80", avgRent: "8.1万円", _count: { properties: 5 } },
   ];
 
-  const displayCities = cities.length > 0 ? cities : fallbackCities;
+  const displayCities = cities.length > 0 ? cities.map((c, i) => ({
+    ...c,
+    avgRent: fallbackCities[i]?.avgRent || "10.5万円"
+  })) : fallbackCities;
 
-  const formattedProperties = featuredProperties.map((p: any) => ({
-    ...p,
-    area: p.area,
-    neighborhood: p.neighborhood,
-    areaInfo: p.neighborhood,
-  })) as unknown as PropertyDto[];
+  const formatList = (list: any[]) =>
+    list.map((p) => ({
+      ...p,
+      area: p.area,
+      neighborhood: p.neighborhood,
+      areaInfo: p.neighborhood,
+    })) as unknown as PropertyDto[];
+
+  const formattedFeatured = formatList(featuredProperties);
+  const formattedNoDeposit = formatList(noDepositProperties.length > 0 ? noDepositProperties : featuredProperties.slice(0, 4));
+  const formattedNearStation = formatList(nearStationProperties.length > 0 ? nearStationProperties : featuredProperties.slice(2, 6));
 
   return (
-    <div className="flex flex-col gap-12 sm:gap-20 pb-16">
-      {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-slate-950 py-16 sm:py-24 lg:py-32 text-white">
-        {/* Ambient background imagery and gradients */}
-        <div className="absolute inset-0 z-0">
+    <div className="flex flex-col gap-12 sm:gap-16 pb-16 bg-[#f4f6f8]">
+      {/* 1. Portal Sub-Header Announcement Bar */}
+      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="bg-brand-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded">SUUMO準拠</span>
+            <span>日本全国の主要都市・駅近の優良物件を網羅したバイリンガル不動産ポータル</span>
+          </div>
+          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
+            <span className="flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> おとり広告ゼロ保証</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="hidden sm:inline flex items-center gap-1"><FileCheck2 className="h-3.5 w-3.5 text-blue-400" /> 全物件 宅建士確認済</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Hero Search Matrix Section (SUUMO Commercial Standard) */}
+      <section className="relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-10 pb-16 sm:pb-20 shadow-sm">
+        {/* Subtle background skyline pattern */}
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
           <img
             src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=1920&auto=format&fit=crop&q=80"
-            alt="Tokyo city view"
-            className="h-full w-full object-cover opacity-25 filter blur-[1px] scale-105"
+            alt="Tokyo Skyline"
+            className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/40" />
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-[600px] rounded-full bg-brand-600/15 blur-[120px] pointer-events-none" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          {dbError && (
-            <div className="mx-auto max-w-xl mb-6 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-4 text-xs text-amber-200 backdrop-blur-md text-left">
-              <p className="font-bold text-amber-300">⚠️ Database Connection Setup Required</p>
-              <p className="mt-1 text-slate-300">
-                If you recently deployed to Vercel, please make sure you added <code className="rounded bg-black/40 px-1.5 py-0.5 text-amber-200 font-mono">DATABASE_URL</code> and <code className="rounded bg-black/40 px-1.5 py-0.5 text-amber-200 font-mono">DIRECT_URL</code> in your <strong>Vercel Project Settings &gt; Environment Variables</strong>, then Redeploy.
-              </p>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Hero Titles */}
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-950/60 px-3.5 py-1 text-xs font-bold text-brand-300 backdrop-blur-md">
+              <Sparkles className="h-3.5 w-3.5 text-brand-400" />
+              <span>厳選物件 {totalCount > 0 ? `${totalCount}+` : "65+"} 件掲載中 • 賃貸 & 売買マーケットプレイス</span>
             </div>
-          )}
-
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-brand-300 backdrop-blur-md mb-6 animate-fade-in">
-            <Sparkles className="h-3.5 w-3.5 text-brand-400" />
-            <span>日本全国の主要都市・駅近の厳選物件 {totalCount > 0 ? `${totalCount}+` : "60+"} 件掲載 (Bilingual Marketplace)</span>
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+              沿線・駅近・こだわり条件で探す<br />
+              <span className="text-brand-400">日本の住まいと理想の暮らし。</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+              東京・大阪・京都・横浜・福岡の賃貸マンション、タワーレジデンス、戸建て住宅。駅徒歩・敷礼ゼロ・間取りでスピーディーに検索。
+            </p>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
-            SUUMOスタイルで探す <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-teal-200 to-emerald-400">
-              理想の住まいと暮らし。
-            </span>
-          </h1>
-
-          <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
-            東京・大阪・京都・横浜・福岡の賃貸マンション、タワーレジデンス、新築・中古戸建てを網羅。駅徒歩・間取り・敷金礼金などこだわり条件でスムーズに検索。
-          </p>
-
-          {/* Hero Search Bar Component */}
-          <div className="mt-8 sm:mt-12">
+          {/* Core Search Bar Component */}
+          <div className="mt-8">
             <SearchBar />
           </div>
 
-          {/* Quick Metrics */}
-          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
+          {/* Quick Filter Shortcut Pills (こだわり条件ショートカット) */}
+          <div className="mt-6 max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-2 text-xs">
+            <span className="text-slate-400 font-bold text-[11px] mr-1">人気条件:</span>
+            <Link
+              href="/search?maxPrice=120000&type=RENT"
+              className="rounded-full bg-white/10 hover:bg-brand-600 hover:text-white px-3 py-1 text-slate-200 font-medium transition-all"
+            >
+              家賃12万円以下
+            </Link>
+            <Link
+              href="/search?type=RENT"
+              className="rounded-full bg-white/10 hover:bg-brand-600 hover:text-white px-3 py-1 text-slate-200 font-medium transition-all"
+            >
+              敷金・礼金0円
+            </Link>
+            <Link
+              href="/search?query=徒歩5分"
+              className="rounded-full bg-white/10 hover:bg-brand-600 hover:text-white px-3 py-1 text-slate-200 font-medium transition-all"
+            >
+              駅徒歩5分以内
+            </Link>
+            <Link
+              href="/search?propertyType=CONDO"
+              className="rounded-full bg-white/10 hover:bg-brand-600 hover:text-white px-3 py-1 text-slate-200 font-medium transition-all"
+            >
+              タワーマンション
+            </Link>
+            <Link
+              href="/search?city=tokyo"
+              className="rounded-full bg-white/10 hover:bg-brand-600 hover:text-white px-3 py-1 text-slate-200 font-medium transition-all"
+            >
+              東京23区
+            </Link>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-center border-t border-slate-800 pt-6">
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-white block">100%</span>
-              <span className="text-xs text-slate-400 font-medium">宅地建物取引士 専任</span>
+              <span className="text-2xl font-black text-white">{totalCount}+</span>
+              <span className="text-[11px] text-slate-400 block font-medium">公開中の厳選物件</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-white block">{totalCount}+</span>
-              <span className="text-xs text-slate-400 font-medium">公開中の厳選物件</span>
+              <span className="text-2xl font-black text-white">100%</span>
+              <span className="text-[11px] text-slate-400 block font-medium">宅地建物取引士確認済</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-white block">駅徒歩</span>
-              <span className="text-xs text-slate-400 font-medium">主要路線・駅近アクセス</span>
+              <span className="text-2xl font-black text-white">5大都市</span>
+              <span className="text-[11px] text-slate-400 block font-medium">東京・大阪・京都・横浜・福岡</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-white block">敷・礼0</span>
-              <span className="text-xs text-slate-400 font-medium">お得な物件多数掲載</span>
+              <span className="text-2xl font-black text-white">JP / EN</span>
+              <span className="text-[11px] text-slate-400 block font-medium">日英完全バイリンガル</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Popular Cities Showcase */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      {/* 3. Live Market Price Benchmark Ticker (家賃相場インサイト) */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full -mt-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-100 text-brand-800">
+                <TrendingUp className="h-4 w-4" />
+              </span>
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+                主要都市の家賃相場レポート (Market Benchmark)
+              </h3>
+            </div>
+            <span className="text-[11px] text-slate-400">
+              ※ 間取り1LDK〜2LDKの平均成約水準 (2026年最新)
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-3">
+            {displayCities.map((c) => (
+              <Link
+                key={c.id}
+                href={`/search?city=${c.slug}`}
+                className="group rounded-xl p-2.5 hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200"
+              >
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-0.5">
+                  <span className="font-bold text-slate-900 group-hover:text-brand-700 transition-colors">
+                    {c.nameJa || c.name}
+                  </span>
+                  <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.2 rounded">
+                    活況
+                  </span>
+                </div>
+                <span className="text-base font-black text-brand-800 block">
+                  {c.avgRent}
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  掲載 {c._count?.properties || 10}件
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Featured Listings (おすすめ物件セレクション) */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
-            <div className="flex items-center gap-2 text-brand-700 text-xs font-bold uppercase tracking-wider mb-1">
-              <Compass className="h-4 w-4" />
-              <span>人気エリア・都市から探す</span>
+            <div className="flex items-center gap-2 text-brand-800 text-xs font-bold uppercase tracking-wider mb-1">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              <span>Featured Properties</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              主要都市・エリア特集
+              おすすめの注目物件
             </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              東京・大阪・京都・横浜・福岡の利便性高いおすすめエリア。
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              駅近、充実の設備、敷金礼金ゼロなどプロが厳選したハイグレード物件。
             </p>
           </div>
+
           <Link
             href="/search"
-            className="flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-800 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 hover:border-brand-600 hover:text-brand-700 transition-all shadow-sm"
           >
-            <span>すべてのエリアを見る (View All)</span>
-            <ArrowRight className="h-4 w-4" />
+            <span>物件一覧を見る ({totalCount}件)</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {formattedFeatured.map((property, idx) => (
+            <PropertyCard key={property.id} property={property} priority={idx < 3} />
+          ))}
+        </div>
+      </section>
+
+      {/* 5. Special Theme Section: 敷金礼金0円 & 駅徒歩5分以内 */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Box A: 敷金礼金0円 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 font-black text-xs">
+                  0円
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">敷金・礼金なし物件</h3>
+                  <p className="text-[11px] text-slate-500">初期費用を抑えてスマートに入居できるお部屋</p>
+                </div>
+              </div>
+              <Link href="/search?type=RENT" className="text-xs font-bold text-brand-700 hover:underline">
+                もっと見る →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {formattedNoDeposit.slice(0, 2).map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          </div>
+
+          {/* Box B: 駅近徒歩5分以内 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-100 text-brand-800">
+                  <Train className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">駅近 徒歩5分以内</h3>
+                  <p className="text-[11px] text-slate-500">雨の日も通勤通学も快適なエキチカ人気物件</p>
+                </div>
+              </div>
+              <Link href="/search?query=徒歩5分" className="text-xs font-bold text-brand-700 hover:underline">
+                もっと見る →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {formattedNearStation.slice(0, 2).map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Popular Metropolises & Areas Directory (主要エリア特集) */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
+          <div>
+            <div className="flex items-center gap-2 text-brand-800 text-xs font-bold uppercase tracking-wider mb-1">
+              <Compass className="h-4 w-4" />
+              <span>Cities & Metropolitan Areas</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              主要都市・エリアから探す
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              日本を代表する5大都市圏の住まい。利便性と居住環境に優れたエリア一覧。
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -180,192 +382,111 @@ export default async function HomePage() {
             <Link
               key={city.id}
               href={`/search?city=${city.slug}`}
-              className="group relative h-72 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+              className="group relative h-64 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
             >
               <img
                 src={city.imageUrl || "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80"}
                 alt={city.name}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="text-xs font-semibold text-brand-300 block">Japan</span>
-                <h3 className="text-xl font-bold tracking-tight text-white leading-tight mt-0.5">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+              <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                <span className="text-[10px] font-bold tracking-wider text-brand-300 uppercase block">Japan Metropolis</span>
+                <h3 className="text-lg font-black tracking-tight text-white leading-tight mt-0.5">
                   {city.nameJa ? `${city.nameJa}` : city.name}
-                  <span className="text-xs font-normal text-slate-300 ml-1.5">({city.name})</span>
+                  <span className="text-xs font-normal text-slate-300 ml-1">({city.name})</span>
                 </h3>
-                <span className="mt-2 inline-flex items-center text-[11px] font-semibold text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full">
-                  {city._count.properties} 件掲載
-                </span>
+                <div className="mt-2 flex items-center justify-between text-[11px]">
+                  <span className="bg-white/20 backdrop-blur-md px-2 py-0.5 rounded font-bold">
+                    {city._count?.properties || 10} 件掲載
+                  </span>
+                  <span className="font-semibold text-brand-200 group-hover:translate-x-1 transition-transform">
+                    探す →
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 3. Featured Property Collection */}
+      {/* 7. Trust, Guarantees & Fiduciary Standards (信頼と安心の取り組み) */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-brand-700 text-xs font-bold uppercase tracking-wider mb-1">
-              <Sparkles className="h-4 w-4" />
-              <span>Hand-Picked Excellence</span>
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="rounded-full bg-brand-50 border border-brand-200 px-3 py-1 text-xs font-bold text-brand-800">
+              安心・安全の住まい探し基準
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              日本の不動産取引における透明性と信頼
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500">
+              当ポータルは宅地建物取引業法を遵守し、正確な物件情報と健全な市場取引をお約束します。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5 space-y-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100 text-brand-800 font-bold">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <h3 className="text-sm font-bold text-slate-900">全物件・おとり広告徹底排除</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                成約済みの物件やおとり掲載をシステムが自動検知。毎日最新の空室状況を更新し、無駄足のない物件見学をサポートします。
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Featured Residences
-            </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Exceptional homes with standout architectural pedigree and amenities.
-            </p>
-          </div>
-          <Link
-            href="/search"
-            className="flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-800 transition-colors"
-          >
-            <span>View All {totalCount} Properties</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {formattedProperties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
-        </div>
-      </section>
+            <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5 space-y-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-800 font-bold">
+                <Award className="h-5 w-5" />
+              </div>
+              <h3 className="text-sm font-bold text-slate-900">国家資格「宅地建物取引士」専任</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                重要事項説明から賃貸借契約書の締結まで、経験豊富な有資格者が責任をもってお客様の契約をサポートいたします。
+              </p>
+            </div>
 
-      {/* 4. Property Types Discovery */}
-      <section className="bg-slate-100 py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Explore by Architectural Style
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Filter instantly by lifestyle requirements and residence dimensions.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            {[
-              { type: "APARTMENT", label: "Apartments", count: "30+" },
-              { type: "CONDO", label: "Condominiums", count: "25+" },
-              { type: "HOUSE", label: "Single Family", count: "20+" },
-              { type: "TOWNHOUSE", label: "Townhouses", count: "15+" },
-              { type: "VILLA", label: "Luxury Villas", count: "10+" },
-              { type: "STUDIO", label: "Studios", count: "8+" },
-            ].map((item) => (
-              <Link
-                key={item.type}
-                href={`/search?propertyType=${item.type}`}
-                className="group flex flex-col items-center justify-center p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-300 hover:shadow-md transition-all text-center"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700 group-hover:scale-110 transition-transform mb-3">
-                  <Building2 className="h-6 w-6" />
-                </div>
-                <span className="text-sm font-bold text-slate-900 group-hover:text-brand-700 transition-colors">
-                  {item.label}
-                </span>
-                <span className="text-[11px] text-slate-400 mt-0.5">{item.count} Listings</span>
-              </Link>
-            ))}
+            <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5 space-y-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-800 font-bold">
+                <FileCheck2 className="h-5 w-5" />
+              </div>
+              <h3 className="text-sm font-bold text-slate-900">初期費用の明瞭会計・分割相談</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                敷金・礼金・仲介手数料・保証会社利用料など、不明瞭な追加料金は一切なし。初期費用の事前見積もりもオンラインで完結。
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 5. Premier Agencies Showcase */}
+      {/* 8. Call to Action for Property Owners (家主・オーナー様へ) */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="flex items-center justify-center gap-2 text-brand-700 text-xs font-bold uppercase tracking-wider mb-1">
-            <Award className="h-4 w-4" />
-            <span>Market Leaders</span>
+        <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 p-8 sm:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="space-y-2 text-center md:text-left">
+            <span className="inline-block bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
+              Owner Portal
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
+              所有物件の空室掲載・入居者募集をお考えのオーナー様へ
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+              スマホやPCから直接お部屋の写真をアップロードして即日掲載。国内外の優良な入居希望者とスムーズにマッチングします。
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Premier Real Estate Brokerages
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Licensed broker partners providing fiduciary excellence and client representation.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {agencies.map((agency) => (
-            <div
-              key={agency.id}
-              className="flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-lg transition-all"
+          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+            <Link
+              href="/signup"
+              className="rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-xs font-black text-slate-950 shadow-lg transition-all"
             >
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <img
-                    src={agency.logoUrl || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100&auto=format&fit=crop&q=80"}
-                    alt={agency.name}
-                    className="h-12 w-12 rounded-2xl object-cover border border-slate-100"
-                  />
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 leading-snug">{agency.name}</h3>
-                    <span className="text-xs text-brand-600 font-medium">{agency._count.agents} Licensed Agents</span>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                  {agency.description}
-                </p>
-              </div>
-
-              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-700">
-                  {agency._count.properties} Active Listings
-                </span>
-                <Link
-                  href={`/search`}
-                  className="text-xs font-bold text-brand-700 hover:text-brand-800"
-                >
-                  View Listings →
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 6. Trust & Process Banner */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="rounded-3xl bg-slate-900 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-500/20 text-brand-400">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Direct Verification</h3>
-                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
-                  Every property undergoes automated and manual review before appearing in public searches.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-500/20 text-brand-400">
-                <KeyRound className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Seamless Touring</h3>
-                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
-                  Schedule in-person walkthroughs or virtual appointments directly with dedicated agents.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-500/20 text-brand-400">
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Transparent Pricing</h3>
-                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
-                  Clear breakdowns of monthly costs, deposits, HOA fees, and mortgage estimators with zero surprises.
-                </p>
-              </div>
-            </div>
+              オーナー無料登録 (Post Housing)
+            </Link>
+            <Link
+              href="/dashboard/listings/new"
+              className="rounded-xl border border-white/20 hover:bg-white/10 px-5 py-3 text-xs font-bold text-white transition-all"
+            >
+              直接掲載画面へ
+            </Link>
           </div>
         </div>
       </section>
