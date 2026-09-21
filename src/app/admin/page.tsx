@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
@@ -17,6 +18,13 @@ import {
 } from "lucide-react";
 
 export default async function AdminPortalPage() {
+  const user = await getCurrentUser();
+
+  // Strict Authentication & Authorization Guard:
+  // Must be authenticated with the ADMIN role to access the admin panel
+  if (!user || user.role !== "ADMIN") {
+    redirect("/login?redirect=/admin&requiredRole=ADMIN");
+  }
   const [
     totalUsers,
     totalListings,
@@ -65,7 +73,7 @@ export default async function AdminPortalPage() {
             <span className="rounded-full bg-purple-50 border border-purple-200 px-3 py-0.5 text-xs font-bold text-purple-700">
               Platform Administration
             </span>
-            <span className="text-xs text-slate-400">• Security Level: Full Access</span>
+            <span className="text-xs text-emerald-700 font-semibold">• 認証済管理者: {user.name} ({user.email})</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
             Admin & Moderation Control Center

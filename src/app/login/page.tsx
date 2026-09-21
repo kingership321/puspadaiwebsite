@@ -116,6 +116,21 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Admin Required Alert Banner */}
+        {(redirectPath === "/admin" || searchParams.get("requiredRole") === "ADMIN") && (
+          <div className="flex items-start gap-3 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-xs font-semibold text-amber-900 shadow-2xs">
+            <ShieldCheck className="h-5 w-5 text-amber-700 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-bold text-slate-900 block text-sm">
+                🔒 管理者認証が必要です (Admin Authentication Required)
+              </span>
+              <p className="text-slate-600 font-normal leading-relaxed">
+                管理ポータル（/admin）へアクセスするには、システム管理者（ADMIN）権限のアカウントでログイン認証を行ってください。
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Error Alert */}
         {error && (
           <div className="flex items-start gap-2.5 rounded-2xl bg-rose-50 border border-rose-200 p-4 text-xs font-semibold text-rose-700">

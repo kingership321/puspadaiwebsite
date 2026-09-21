@@ -88,7 +88,7 @@ export function Footer() {
               <li><Link href="/about" className="hover:text-white transition-colors">運営会社概要</Link></li>
               <li><Link href="/privacy" className="hover:text-white transition-colors">個人情報保護方針</Link></li>
               <li><Link href="/terms" className="hover:text-white transition-colors">利用規約</Link></li>
-              <li><Link href="/admin" className="hover:text-emerald-400 transition-colors">宅建業者・管理会社ポータル</Link></li>
+              <li><Link href="/login?redirect=/admin&requiredRole=ADMIN" className="hover:text-emerald-400 transition-colors">宅建業者・管理会社ポータル</Link></li>
             </ul>
           </div>
         </div>
@@ -96,7 +96,7 @@ export function Footer() {
         <div className="mt-12 border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
           <p>© {new Date().getFullYear()} HavenSUUMO Real Estate Co., Ltd. All rights reserved. 宅地建物取引業者免許証番号: 国土交通大臣 (3) 第88204号</p>
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="hover:text-slate-300">管理画面ログイン</Link>
+            <Link href="/login?redirect=/admin&requiredRole=ADMIN" className="hover:text-slate-300">管理画面ログイン</Link>
             <span>•</span>
             <Link href="/privacy" className="hover:text-slate-300">プライバシーポリシー</Link>
             <span>•</span>
