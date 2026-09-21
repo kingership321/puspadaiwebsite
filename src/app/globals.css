@@ -44,9 +44,40 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Japanese Real Estate Badges */
+/* Authentic Japanese Real Estate Portal Headings (SUUMO style) */
+.suumo-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.suumo-section-heading::before {
+  content: "";
+  display: inline-block;
+  width: 0.375rem;
+  height: 1.5rem;
+  background: linear-gradient(to bottom, #00a854, #008836);
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+/* Japanese Real Estate Badges & Tags */
 .badge-suumo-primary {
-  background-color: #15803d;
+  background-color: #00a854;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.badge-suumo-orange {
+  background-color: #ff6b00;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.badge-suumo-red {
+  background-color: #d92038;
   color: #ffffff;
   font-weight: 800;
   border-radius: 4px;
@@ -60,6 +91,14 @@
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   border: 1px solid #e2e8f0;
+}
+
+/* Japanese Portal Tab Active Highlight */
+.suumo-tab-active {
+  background-color: #00a854;
+  color: #ffffff;
+  font-weight: 700;
+  border-color: #00a854;
 }
 
 /* Custom scrollbars */
@@ -119,3 +158,74 @@
 .animate-fade-in {
   animation: fadeIn 0.25s ease-out forwards;
 }
+
+/* Japanese Youth Lifestyle & Aesthetics */
+.hashtag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.hashtag-pill:hover {
+  border-color: #ff5a3c;
+  color: #ff5a3c;
+  background-color: #fff5f3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(255, 90, 60, 0.12);
+}
+
+.hashtag-pill.active {
+  background-color: #ff5a3c;
+  color: #ffffff;
+  border-color: #ff5a3c;
+  box-shadow: 0 4px 12px rgba(255, 90, 60, 0.25);
+}
+
+/* Instagram-style Area Story Avatar Ring */
+.story-avatar-ring {
+  position: relative;
+  padding: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ff5a3c 0%, #ff9e44 50%, #8b5cf6 100%);
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.story-avatar-ring:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(255, 90, 60, 0.3);
+}
+
+/* Lifestyle Card Hover */
+.lifestyle-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lifestyle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
+}
+
+/* LINE Pulsing Glow */
+@keyframes linePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(6, 199, 85, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(6, 199, 85, 0);
+  }
+}
+
+.animate-line-pulse {
+  animation: linePulse 2.5s infinite;
+}
+

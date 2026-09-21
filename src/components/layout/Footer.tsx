@@ -27,32 +27,32 @@ export function Footer() {
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-2.5 text-white">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-white shadow-md shadow-emerald-700/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md">
                 <Building2 className="h-5 w-5" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-white leading-none">
+                <span className="text-xl font-black tracking-tight text-white leading-none">
                   Haven<span className="text-emerald-400">SUUMO</span>
                 </span>
-                <span className="text-[10px] text-emerald-300 font-medium tracking-wider uppercase mt-0.5">
-                  Professional Japanese Real Estate Portal
+                <span className="text-[10px] text-emerald-300 font-bold tracking-wider mt-0.5">
+                  暮らしを楽しむ、お部屋探しポータル
                 </span>
               </div>
             </Link>
 
             <p className="max-w-sm text-xs text-slate-400 leading-relaxed">
-              HavenSUUMO（ヘイブンスーモ）は、東京都心・首都圏・関西・主要都市の優良物件を網羅する次世代リアルエステートポータルです。全物件おとり広告ゼロ・専任宅建士監修の正確な物件概要をお届けします。
+              HavenSUUMOは、Z世代・ミレニアル世代に向けた次世代の住まい探しポータルです。全物件おとり広告ゼロ・LINEでサクッと相談＆来店不要オンライン内見に対応しています。
             </p>
 
-            <div className="space-y-1.5 pt-1 text-xs text-slate-400">
-              <p className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-emerald-400" />
-                <span>東京都千代田区丸の内1-9-1 丸の内中央ビル</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <Phone className="h-3.5 w-3.5 text-emerald-400" />
-                <span>0120-800-928（平日 09:30〜19:00）</span>
-              </p>
+            <div className="pt-2">
+              <a
+                href="https://line.me/R/ti/p/@havensuumo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#06C755] hover:bg-[#05b34c] px-4 py-2 text-xs font-black text-white shadow-md transition-all"
+              >
+                <span>公式LINEで無料相談・空室確認</span>
+              </a>
             </div>
           </div>
 
@@ -60,11 +60,11 @@ export function Footer() {
           <div className="space-y-3">
             <p className="text-xs font-bold uppercase tracking-wider text-white">賃貸・売買を探す</p>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/rent" className="hover:text-white transition-colors">賃貸物件を探す (Rent)</Link></li>
-              <li><Link href="/buy" className="hover:text-white transition-colors">売買マンション・戸建 (Buy)</Link></li>
-              <li><Link href="/search?deposit=0&keyMoney=0" className="hover:text-white transition-colors">敷金・礼金0円物件</Link></li>
-              <li><Link href="/search?walkMinutes=5" className="hover:text-white transition-colors">駅近・徒歩5分以内</Link></li>
-              <li><Link href="/search?propertyType=MANSION" className="hover:text-white transition-colors">分譲賃貸・タワーマンション</Link></li>
+              <li><Link href="/rent" className="hover:text-emerald-400 transition-colors">賃貸マンション・アパート</Link></li>
+              <li><Link href="/buy" className="hover:text-emerald-400 transition-colors">新築・中古マンション購入</Link></li>
+              <li><Link href="/search?deposit=0&keyMoney=0" className="hover:text-emerald-400 transition-colors">敷金・礼金0円物件特集</Link></li>
+              <li><Link href="/search?walkMinutes=5" className="hover:text-emerald-400 transition-colors">駅近・徒歩5分以内</Link></li>
+              <li><Link href="/search?propertyType=MANSION" className="hover:text-emerald-400 transition-colors">分譲賃貸・タワーマンション</Link></li>
             </ul>
           </div>
 
@@ -72,11 +72,11 @@ export function Footer() {
           <div className="space-y-3">
             <p className="text-xs font-bold uppercase tracking-wider text-white">主要エリア・沿線</p>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/search?city=tokyo" className="hover:text-white transition-colors">東京都心 (港区・渋谷区・新宿区)</Link></li>
-              <li><Link href="/search?city=osaka" className="hover:text-white transition-colors">大阪 (梅田・難波・本町)</Link></li>
-              <li><Link href="/search?city=kyoto" className="hover:text-white transition-colors">京都 (烏丸・四条・中京区)</Link></li>
-              <li><Link href="/search?city=yokohama" className="hover:text-white transition-colors">横浜 (みなとみらい・中区)</Link></li>
-              <li><Link href="/search?city=fukuoka" className="hover:text-white transition-colors">福岡 (天神・博多・中央区)</Link></li>
+              <li><Link href="/search?city=tokyo" className="hover:text-emerald-400 transition-colors">東京都心 (港区・渋谷区・新宿区)</Link></li>
+              <li><Link href="/search?query=山手線" className="hover:text-emerald-400 transition-colors">JR山手線沿線</Link></li>
+              <li><Link href="/search?city=osaka" className="hover:text-emerald-400 transition-colors">大阪 (梅田・難波・本町)</Link></li>
+              <li><Link href="/search?city=kyoto" className="hover:text-emerald-400 transition-colors">京都 (烏丸・四条・中京区)</Link></li>
+              <li><Link href="/search?city=yokohama" className="hover:text-emerald-400 transition-colors">横浜 (みなとみらい・中区)</Link></li>
             </ul>
           </div>
 
@@ -84,11 +84,11 @@ export function Footer() {
           <div className="space-y-3">
             <p className="text-xs font-bold uppercase tracking-wider text-white">企業情報・サポート</p>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/guides" className="hover:text-white transition-colors">お部屋探しの基礎知識・ガイド</Link></li>
-              <li><Link href="/about" className="hover:text-white transition-colors">運営会社概要</Link></li>
-              <li><Link href="/privacy" className="hover:text-white transition-colors">個人情報保護方針</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">利用規約</Link></li>
-              <li><Link href="/login?redirect=/admin&requiredRole=ADMIN" className="hover:text-emerald-400 transition-colors">宅建業者・管理会社ポータル</Link></li>
+              <li><Link href="/guides" className="hover:text-emerald-400 transition-colors">お部屋探しの基礎知識・ガイド</Link></li>
+              <li><Link href="/about" className="hover:text-emerald-400 transition-colors">運営会社概要</Link></li>
+              <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">個人情報保護方針</Link></li>
+              <li><Link href="/terms" className="hover:text-emerald-400 transition-colors">利用規約</Link></li>
+              <li><Link href="/dashboard/listings/new" className="hover:text-[#ff6b00] font-bold transition-colors">オーナー様 物件無料掲載</Link></li>
             </ul>
           </div>
         </div>

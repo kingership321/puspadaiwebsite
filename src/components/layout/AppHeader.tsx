@@ -21,6 +21,7 @@ import {
   PlusCircle,
   LogOut,
   Sparkles,
+  Phone,
 } from "lucide-react";
 import { UserRole } from "@/types";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -91,27 +92,68 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
   };
 
   const navLinks = [
-    { href: "/rent", label: t.rent },
-    { href: "/buy", label: t.buy },
-    { href: "/search", label: t.all },
-    { href: "/guides", label: t.guides },
+    { href: "/rent", label: lang === "ja" ? "賃貸を探す" : "Rent" },
+    { href: "/buy", label: lang === "ja" ? "購入・売買" : "Buy" },
+    { href: "/search", label: lang === "ja" ? "物件一覧" : "All Listings" },
+    { href: "/guides", label: lang === "ja" ? "住まいガイド" : "Guides" },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/98 shadow-xs transition-all">
+      {/* 0. Youth-Friendly Top Utility Ribbon */}
+      <div className="hidden lg:block bg-gradient-to-r from-emerald-50 via-slate-50 to-amber-50/50 border-b border-slate-200/80 text-xs text-slate-600 py-1.5 px-4">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <div className="flex items-center gap-3 text-[11px]">
+            <span className="inline-flex items-center gap-1.5 font-black text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full">
+              <Sparkles className="h-3 w-3 text-emerald-600" />
+              <span>Z世代・ミレニアル世代の住まい探し</span>
+            </span>
+            <span className="text-slate-300">|</span>
+            <span className="text-slate-600 font-bold flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+              <span>しつこい営業電話ゼロ保証 • 来店不要オンライン内見OK</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 text-[11px]">
+            <a
+              href="https://line.me/R/ti/p/@havensuumo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-[#06C755] font-black hover:underline"
+            >
+              <span>LINEでサクッと相談受付中</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#06C755] animate-ping" />
+            </a>
+            <span className="text-slate-300">|</span>
+            <Link href="/guides" className="text-slate-500 hover:text-emerald-700 transition-colors">
+              一人暮らしガイド
+            </Link>
+            <Link href="/about" className="text-slate-500 hover:text-emerald-700 transition-colors">
+              運営会社
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6 lg:gap-8">
           <Link href="/" className="flex items-center gap-2.5 text-slate-900 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00a854] to-[#10b981] text-white shadow-md shadow-[#00a854]/20 group-hover:scale-105 transition-transform">
               <Building2 className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-slate-900 leading-none">
-                Haven<span className="text-brand-600">SUUMO</span>
-              </span>
-              <span className="text-[10px] font-medium tracking-wider text-slate-500 uppercase mt-0.5">
-                {t.brandTagline}
+              <div className="flex items-center gap-1">
+                <span className="text-xl font-black tracking-tight text-slate-900 leading-none">
+                  Haven<span className="text-[#00a854]">SUUMO</span>
+                </span>
+                <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2">
+                  公式
+                </span>
+              </div>
+              <span className="text-[10px] font-bold text-slate-500 mt-0.5">
+                {lang === "ja" ? "暮らしを楽しむ、お部屋探しポータル" : "Next-Gen Japanese Lifestyle Housing"}
               </span>
             </div>
           </Link>
@@ -124,10 +166,10 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-colors ${
                     isActive
-                      ? "bg-slate-100 text-brand-700 font-semibold"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      ? "bg-emerald-50 text-[#008836] border border-emerald-200"
+                      : "text-slate-700 hover:bg-slate-50 hover:text-[#00a854]"
                   }`}
                 >
                   {link.label}
@@ -139,6 +181,18 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
 
         {/* Right Action Icons & Auth Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Direct LINE Consultation Quick Button */}
+          <a
+            href="https://line.me/R/ti/p/@havensuumo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-1.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white px-3 py-1.5 text-xs font-black shadow-xs transition-all hover:scale-[1.02]"
+            title="LINEで無料相談・空室確認"
+          >
+            <span className="text-[10px] font-black bg-white/25 px-1 rounded-sm">LINE</span>
+            <span>相談する</span>
+          </a>
+
           {/* Bilingual Language Switcher */}
           <button
             onClick={toggleLang}

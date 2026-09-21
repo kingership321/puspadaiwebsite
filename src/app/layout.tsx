@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { Footer } from "@/components/layout/Footer";
@@ -12,21 +12,30 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-noto-sans-jp",
+});
+
 import { LanguageProvider } from "@/lib/LanguageContext";
 
+import { LineConsultationWidget } from "@/components/layout/LineConsultationWidget";
+
 export const metadata: Metadata = {
-  title: "SUUMO Style — Japan Bilingual Real Estate Marketplace (住まい・賃貸・売買)",
+  title: "HavenSUUMO — 暮らしを楽しむ、お部屋探しポータル (賃貸・売買)",
   description:
-    "Japan's premier bilingual real estate marketplace. Explore rental apartments, tower mansions, and architectural homes across Tokyo, Osaka, Kyoto, Yokohama, and Fukuoka with station walk distances and 万円 pricing.",
+    "Z世代・ミレニアル世代に向けた次世代の住まい探し。写真とリアルな口コミ、LINE相談、敷金礼金0円特集、駅近5分マンションを網羅。",
   keywords: [
-    "Japan real estate",
-    "Tokyo apartments for rent",
-    "Osaka mansions",
-    "Kyoto machiya",
-    "SUUMO",
     "賃貸",
+    "一人暮らし",
+    "デザイナーズ",
+    "リノベーション",
+    "敷金礼金0円",
+    "LINE相談",
+    "SUUMO",
     "マンション",
-    "不動産",
     "駅徒歩",
   ],
 };
@@ -39,13 +48,14 @@ export default async function RootLayout({
   const user = await getCurrentUser();
 
   return (
-    <html lang="ja" className={inter.variable}>
-      <body className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 font-sans pb-16 md:pb-0">
+    <html lang="ja" className={`${inter.variable} ${notoSansJP.variable}`}>
+      <body className="min-h-screen flex flex-col bg-[#FAF9F5] text-slate-900 font-sans pb-16 md:pb-0 selection:bg-rose-500 selection:text-white">
         <LanguageProvider>
           <AppHeader initialRole={user?.role} />
           <main className="flex-1">{children}</main>
           <Footer />
           <MobileNav />
+          <LineConsultationWidget />
         </LanguageProvider>
       </body>
     </html>
