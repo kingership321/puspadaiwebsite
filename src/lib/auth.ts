@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { AuthUser, UserRole } from "@/types";
+import { prisma } from "@/lib/prisma";
 
 export const DEMO_USERS: Record<UserRole, AuthUser> = {
   SEEKER: {
@@ -34,12 +35,41 @@ export const DEMO_USERS: Record<UserRole, AuthUser> = {
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   const cookieStore = cookies();
-  const roleCookie = cookieStore.get("haven_role")?.value as UserRole | undefined;
 
+  // 1. Check if user has an explicit logged-out flag
+  const isLoggedOut = cookieStore.get("haven_logged_out")?.value === "true";
+  if (isLoggedOut) {
+    return null;
+  }
+
+  // 2. Check for real registered user ID in database
+  const userId = cookieStore.get("haven_user_id")?.value;
+  if (userId) {
+    try {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, name: true, email: true, role: true, avatarUrl: true },
+      });
+      if (dbUser) {
+        return {
+          id: dbUser.id,
+          name: dbUser.name,
+          email: dbUser.email,
+          role: (dbUser.role as UserRole) || "SEEKER",
+          avatarUrl: dbUser.avatarUrl || undefined,
+        };
+      }
+    } catch (err) {
+      console.error("Failed to query user from session:", err);
+    }
+  }
+
+  // 3. Fallback to persona switcher role cookie if set
+  const roleCookie = cookieStore.get("haven_role")?.value as UserRole | undefined;
   if (roleCookie && DEMO_USERS[roleCookie]) {
     return DEMO_USERS[roleCookie];
   }
 
-  // Default to Seeker for smooth first-time browsing experience
+  // 4. If no cookies are set, return default demo seeker for immediate browsing convenience
   return DEMO_USERS.SEEKER;
 }

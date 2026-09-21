@@ -10,19 +10,21 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String
-  email         String         @unique
-  phone         String?
-  role          String         @default("SEEKER") // SEEKER, OWNER, AGENT, ADMIN
-  avatarUrl     String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  passwordHash    String?
+  phone           String?
+  role            String         @default("SEEKER") // SEEKER, OWNER, AGENT, ADMIN
+  avatarUrl       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
-  agents        Agent[]
-  favorites     Favorite[]
-  savedSearches SavedSearch[]
-  inquiries     Inquiry[]
+  agents          Agent[]
+  favorites       Favorite[]
+  savedSearches   SavedSearch[]
+  inquiries       Inquiry[]
+  ownedProperties Property[]     @relation("OwnerProperties")
 }
 
 model Agency {
@@ -133,6 +135,7 @@ model Property {
   areaId          String
   agencyId        String?
   agentId         String?
+  ownerId         String?
   latitude        Float
   longitude       Float
   status          String            @default("PUBLISHED") // DRAFT, PENDING_REVIEW, PUBLISHED, PAUSED, SOLD, RENTED, ARCHIVED
@@ -146,6 +149,7 @@ model Property {
   neighborhood    Area              @relation(fields: [areaId], references: [id])
   agency          Agency?           @relation(fields: [agencyId], references: [id])
   agent           Agent?            @relation(fields: [agentId], references: [id])
+  owner           User?             @relation("OwnerProperties", fields: [ownerId], references: [id])
   images          PropertyImage[]
   amenities       PropertyAmenity[]
   favorites       Favorite[]

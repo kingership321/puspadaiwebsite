@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
         areaId,
         agentId: agent ? agent.id : undefined,
         agencyId: agent ? agent.agencyId : undefined,
+        ownerId: user.role === "OWNER" ? user.id : undefined,
         latitude: lat,
         longitude: lng,
         furnished: !!furnished,
