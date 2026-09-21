@@ -82,13 +82,13 @@ export function JapanesePortalSearch() {
   };
 
   const MAJOR_TRAIN_LINES = [
-    { id: "yamanote", name: "JR山手線", nameEn: "JR Yamanote Line", station: "渋谷" },
-    { id: "ginza", name: "東京メトロ銀座線", nameEn: "Tokyo Metro Ginza", station: "表参道" },
-    { id: "chiyoda", name: "東京メトロ千代田線", nameEn: "Chiyoda Line", station: "乃木坂" },
-    { id: "marunouchi", name: "東京メトロ丸ノ内線", nameEn: "Marunouchi Line", station: "新宿" },
-    { id: "toyoko", name: "東急東横線", nameEn: "Tokyu Toyoko Line", station: "中目黒" },
-    { id: "chuo", name: "JR中央線", nameEn: "JR Chuo Line", station: "吉祥寺" },
-    { id: "midosuji", name: "大阪メトロ御堂筋線", nameEn: "Osaka Midosuji Line", station: "梅田" },
+    { id: "yamanote", name: "JR山手線", nameEn: "JR Yamanote Line", station: "渋谷", stationEn: "Shibuya" },
+    { id: "ginza", name: "東京メトロ銀座線", nameEn: "Tokyo Metro Ginza Line", station: "表参道", stationEn: "Omotesando" },
+    { id: "chiyoda", name: "東京メトロ千代田線", nameEn: "Tokyo Metro Chiyoda Line", station: "乃木坂", stationEn: "Nogizaka" },
+    { id: "marunouchi", name: "東京メトロ丸ノ内線", nameEn: "Tokyo Metro Marunouchi Line", station: "新宿", stationEn: "Shinjuku" },
+    { id: "toyoko", name: "東急東横線", nameEn: "Tokyu Toyoko Line", station: "中目黒", stationEn: "Nakameguro" },
+    { id: "chuo", name: "JR中央線", nameEn: "JR Chuo Line", station: "吉祥寺", stationEn: "Kichijoji" },
+    { id: "midosuji", name: "大阪メトロ御堂筋線", nameEn: "Osaka Metro Midosuji Line", station: "梅田", stationEn: "Umeda" },
   ];
 
   const TOKYO_WARDS = [
@@ -240,7 +240,7 @@ export function JapanesePortalSearch() {
                       <div className="truncate">
                         <span className="block truncate">{lang === "ja" ? line.name : line.nameEn}</span>
                         <span className="text-[10px] text-slate-400 block truncate">
-                          {lang === "ja" ? `主要駅: ${line.station}` : `Key Station: ${line.station}`}
+                          {lang === "ja" ? `主要駅: ${line.station}` : `Key Station: ${line.stationEn || line.station}`}
                         </span>
                       </div>
                       {isSelected && <Check className="h-4 w-4 text-emerald-600 shrink-0" />}

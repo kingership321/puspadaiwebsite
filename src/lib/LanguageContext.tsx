@@ -17,8 +17,14 @@ const LanguageContext = createContext<LanguageContextType>({
   t: translations.ja,
 });
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>("ja");
+export function LanguageProvider({
+  children,
+  initialLang = "ja",
+}: {
+  children: React.ReactNode;
+  initialLang?: Language;
+}) {
+  const [lang, setLangState] = useState<Language>(initialLang);
 
   useEffect(() => {
     // Read cookie or local storage

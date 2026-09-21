@@ -116,8 +116,10 @@ export function PropertyCard({
 
           {isShikikinZero && isReikinZero && isRent && (
             <span className="bg-rose-500 text-white px-2 py-0.5 text-[10px] font-black rounded-full shadow-2xs animate-pulse">
-              敷0・礼0
+              {lang === "ja" ? "敷0・礼0" : "0 Deposit"}
             </span>
+          )}
+
           {property.featured && (
             <span className="bg-amber-500 text-white px-2 py-0.5 text-[10px] font-black rounded-full shadow-2xs flex items-center gap-0.5">
               <Sparkles className="h-2.5 w-2.5" />
@@ -250,12 +252,9 @@ export function PropertyCard({
             <span className="text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
               {lang === "ja" ? "#2階以上" : "#Floor2+"}
             </span>
-          </div>se-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
-              #2階以上
-            </span>
             {isShikikinZero && isReikinZero && (
               <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
-                #初期費用安め
+                {lang === "ja" ? "#初期費用安め" : "#LowCost"}
               </span>
             )}
           </div>
@@ -268,16 +267,16 @@ export function PropertyCard({
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#e8f9ee] hover:bg-[#d5f5de] text-[#06C755] font-black px-2.5 py-1.5 text-[11px] transition-colors shrink-0"
-            title="LINEでこのお部屋の空室確認・内見予約"
+            title={lang === "ja" ? "LINEでこのお部屋の空室確認・内見予約" : "Check vacancy or book viewing on LINE"}
           >
-            <span>LINE内見</span>
+            <span>{lang === "ja" ? "LINE内見" : "LINE Tour"}</span>
           </a>
 
           <Link
             href={`/property/${property.slug}`}
             className="inline-flex items-center justify-center gap-1 rounded-xl bg-slate-900 hover:bg-rose-600 px-3 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-bold text-white shadow-2xs transition-colors shrink-0"
           >
-            <span>詳細を見る</span>
+            <span>{lang === "ja" ? "詳細を見る" : "Details"}</span>
             <ChevronRight className="h-3 w-3" />
           </Link>
         </div>

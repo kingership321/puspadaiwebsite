@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatJapanesePrice, formatDate } from "@/lib/utils";
 import { PropertyGallery } from "@/components/property/PropertyGallery";
@@ -63,7 +64,12 @@ export async function generateMetadata({ params }: Props) {
   }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function PropertyDetailPage({ params }: Props) {
+  const cookieStore = cookies();
+  const lang = (cookieStore.get("haven_lang")?.value === "en" ? "en" : "ja") as "ja" | "en";
+
   let property = null;
   let similar: any[] = [];
 
@@ -128,22 +134,26 @@ export default async function PropertyDetailPage({ params }: Props) {
       {/* Top Breadcrumb Navigation & Property Code */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3 text-xs text-slate-500">
         <nav className="flex items-center gap-1.5 font-medium">
-          <Link href="/" className="hover:text-emerald-700">SUUMOトップ</Link>
+          <Link href="/" className="hover:text-emerald-700">
+            {lang === "ja" ? "SUUMOトップ" : "Home"}
+          </Link>
           <span>›</span>
           <Link href={`/search?type=${property.listingType}`} className="hover:text-emerald-700">
-            {property.listingType === "RENT" ? "賃貸物件" : "売買・マンション"}
+            {lang === "ja"
+              ? (property.listingType === "RENT" ? "賃貸物件" : "売買・マンション")
+              : (property.listingType === "RENT" ? "Rentals" : "Buy / Condos")}
           </Link>
           <span>›</span>
           <Link href={`/search?city=${property.city.slug}`} className="hover:text-emerald-700">
-            {property.city.nameJa || property.city.name}
+            {lang === "ja" ? (property.city.nameJa || property.city.name) : property.city.name}
           </Link>
           <span>›</span>
           <span className="text-slate-900 font-semibold truncate max-w-xs">
-            {property.titleJa || property.title}
+            {lang === "ja" ? (property.titleJa || property.title) : (property.title || property.titleJa)}
           </span>
         </nav>
         <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-          <span>物件管理番号:</span>
+          <span>{lang === "ja" ? "物件管理番号:" : "Listing Ref ID:"}</span>
           <span className="font-bold text-slate-700">{propertyRefId}</span>
         </div>
       </div>
@@ -152,27 +162,33 @@ export default async function PropertyDetailPage({ params }: Props) {
       <div>
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="rounded-md bg-emerald-700 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
-            {property.listingType === "RENT" ? "賃貸" : "売買"}
+            {property.listingType === "RENT" ? (lang === "ja" ? "賃貸" : "RENT") : (lang === "ja" ? "売買" : "SALE")}
           </span>
           <span className="rounded-md bg-slate-800 px-2.5 py-0.5 text-xs font-bold text-white">
-            {property.propertyType === "MANSION" ? "マンション" : property.propertyType === "HOUSE" ? "一戸建て" : "アパート"}
+            {property.propertyType === "MANSION"
+              ? (lang === "ja" ? "マンション" : "Mansion/Condo")
+              : property.propertyType === "HOUSE"
+              ? (lang === "ja" ? "一戸建て" : "Single House")
+              : (lang === "ja" ? "アパート" : "Apartment")}
           </span>
           {property.featured && (
             <span className="rounded-md bg-amber-500 text-white px-2.5 py-0.5 text-xs font-bold flex items-center gap-1 shadow-2xs">
               <Sparkles className="h-3 w-3" />
-              特選物件
+              {lang === "ja" ? "特選物件" : "Featured"}
             </span>
           )}
           <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded">
-            ✔ おとり広告ゼロ（実在確認済）
+            {lang === "ja" ? "✔ おとり広告ゼロ（実在確認済）" : "✔ Verified Listing (Zero Bait & Switch)"}
           </span>
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
-          {property.titleJa || property.title}
+          {lang === "ja" ? (property.titleJa || property.title) : (property.title || property.titleJa)}
         </h1>
         {property.titleJa && (
-          <p className="text-sm font-medium text-slate-500 mt-0.5">{property.title}</p>
+          <p className="text-sm font-medium text-slate-500 mt-0.5">
+            {lang === "ja" ? property.title : property.titleJa}
+          </p>
         )}
 
         <div className="mt-2.5 flex flex-wrap items-center gap-3 text-xs text-slate-700">
@@ -181,7 +197,9 @@ export default async function PropertyDetailPage({ params }: Props) {
               <Train className="h-4 w-4 text-emerald-700" />
               <span>
                 {property.stationLine ? `${property.stationLine} ` : ""}
-                {property.stationName}駅 徒歩{property.walkMinutes || 5}分
+                {lang === "ja"
+                  ? `${property.stationName}駅 徒歩${property.walkMinutes || 5}分`
+                  : `${property.stationName} Stn, ${property.walkMinutes || 5}m walk`}
               </span>
             </div>
           )}
@@ -189,7 +207,11 @@ export default async function PropertyDetailPage({ params }: Props) {
           <div className="inline-flex items-center gap-1.5 text-slate-600 font-medium">
             <MapPin className="h-4 w-4 text-slate-400" />
             <span>
-              {property.address}, {property.neighborhood?.nameJa || property.neighborhood?.name}, {property.city.nameJa || property.city.name}
+              {property.address},{" "}
+              {lang === "ja"
+                ? (property.neighborhood?.nameJa || property.neighborhood?.name)
+                : (property.neighborhood?.name || property.neighborhood?.nameJa)}
+              , {lang === "ja" ? (property.city.nameJa || property.city.name) : property.city.name}
             </span>
           </div>
         </div>
@@ -202,15 +224,17 @@ export default async function PropertyDetailPage({ params }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column */}
         <div className="lg:col-span-8 space-y-8">
-          {/* SUUMO Style JPY Pricing Banner */}
+          {/* Pricing Banner */}
           <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-slate-50 to-white border border-emerald-200/80 shadow-2xs flex flex-wrap items-baseline gap-6 sm:gap-8">
             <div>
               <span className="text-[11px] font-bold text-slate-500 block">
-                {property.listingType === "RENT" ? "賃料 (Monthly Rent)" : "販売価格 (Price)"}
+                {property.listingType === "RENT"
+                  ? (lang === "ja" ? "賃料 (Monthly Rent)" : "Monthly Rent")
+                  : (lang === "ja" ? "販売価格 (Price)" : "Purchase Price")}
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-3xl sm:text-4xl font-black text-emerald-700 tracking-tight">
-                  {formatJapanesePrice(property.price, property.listingType === "RENT", "ja")}
+                  {formatJapanesePrice(property.price, property.listingType === "RENT", lang)}
                 </span>
                 <span className="text-xs font-semibold text-slate-500">
                   ({formatCurrency(property.price, property.currency, "en")})
@@ -220,24 +244,38 @@ export default async function PropertyDetailPage({ params }: Props) {
 
             {property.managementFee && (
               <div className="border-l border-slate-200 pl-4 sm:pl-6">
-                <span className="text-[11px] font-bold text-slate-500 block">管理費・共益費</span>
+                <span className="text-[11px] font-bold text-slate-500 block">
+                  {lang === "ja" ? "管理費・共益費" : "Management Fee"}
+                </span>
                 <span className="text-base sm:text-lg font-bold text-slate-900">
-                  ¥{property.managementFee.toLocaleString()} <span className="text-xs font-normal text-slate-500">/ 月</span>
+                  ¥{property.managementFee.toLocaleString()}{" "}
+                  <span className="text-xs font-normal text-slate-500">
+                    {lang === "ja" ? "/ 月" : "/ mo"}
+                  </span>
                 </span>
               </div>
             )}
 
             <div className="border-l border-slate-200 pl-4 sm:pl-6">
-              <span className="text-[11px] font-bold text-slate-500 block">敷金 / 礼金</span>
+              <span className="text-[11px] font-bold text-slate-500 block">
+                {lang === "ja" ? "敷金 / 礼金" : "Deposit / Key Money"}
+              </span>
               <span className="text-base sm:text-lg font-bold text-slate-900">
-                {property.deposit ? `${(property.deposit / property.price).toFixed(0)}ヶ月` : "敷0"} /{" "}
-                {property.keyMoney ? `${(property.keyMoney / property.price).toFixed(0)}ヶ月` : "礼0"}
+                {property.deposit
+                  ? `${(property.deposit / property.price).toFixed(0)}${lang === "ja" ? "ヶ月" : "mo"}`
+                  : (lang === "ja" ? "敷0" : "Dep ¥0")}{" "}
+                /{" "}
+                {property.keyMoney
+                  ? `${(property.keyMoney / property.price).toFixed(0)}${lang === "ja" ? "ヶ月" : "mo"}`
+                  : (lang === "ja" ? "礼0" : "Key ¥0")}
               </span>
             </div>
 
             {property.layout && (
               <div className="border-l border-slate-200 pl-4 sm:pl-6">
-                <span className="text-[11px] font-bold text-slate-500 block">間取り</span>
+                <span className="text-[11px] font-bold text-slate-500 block">
+                  {lang === "ja" ? "間取り" : "Layout"}
+                </span>
                 <span className="text-base sm:text-lg font-black text-emerald-800">
                   {property.layout}
                 </span>
@@ -252,7 +290,9 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <Bed className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-medium block">間取り (Layout)</span>
+                <span className="text-[11px] text-slate-400 font-medium block">
+                  {lang === "ja" ? "間取り (Layout)" : "Room Layout"}
+                </span>
                 <span className="text-sm font-bold text-slate-900">
                   {property.layout || (property.bedrooms === 0 ? "1R/1K" : `${property.bedrooms}LDK`)}
                 </span>
@@ -264,9 +304,14 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <Maximize className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-medium block">専有面積 (Area)</span>
+                <span className="text-[11px] text-slate-400 font-medium block">
+                  {lang === "ja" ? "専有面積 (Area)" : "Living Area"}
+                </span>
                 <span className="text-sm font-bold text-slate-900">
-                  {property.area} ㎡ <span className="text-[11px] text-slate-400 font-normal">({tsubo}坪)</span>
+                  {property.area} ㎡{" "}
+                  <span className="text-[11px] text-slate-400 font-normal">
+                    ({tsubo}{lang === "ja" ? "坪" : " tsubo"})
+                  </span>
                 </span>
               </div>
             </div>
@@ -276,9 +321,13 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <Building className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-medium block">階数 / 構造</span>
+                <span className="text-[11px] text-slate-400 font-medium block">
+                  {lang === "ja" ? "階数 / 構造" : "Floor / Structure"}
+                </span>
                 <span className="text-sm font-bold text-slate-900">
-                  {property.floor ? `${property.floor}階 / ${property.totalFloors || 10}階建` : "低層階"}
+                  {property.floor
+                    ? `${property.floor}F / ${property.totalFloors || 10}F`
+                    : (lang === "ja" ? "低層階" : "Lower Floor")}
                 </span>
               </div>
             </div>
@@ -288,9 +337,13 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <Calendar className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-medium block">築年月 (Year)</span>
+                <span className="text-[11px] text-slate-400 font-medium block">
+                  {lang === "ja" ? "築年月 (Year)" : "Year Built"}
+                </span>
                 <span className="text-sm font-bold text-slate-900">
-                  {property.yearBuilt ? `${property.yearBuilt}年築` : "新築・築浅"}
+                  {property.yearBuilt
+                    ? (lang === "ja" ? `${property.yearBuilt}年築` : `Built ${property.yearBuilt}`)
+                    : (lang === "ja" ? "新築・築浅" : "Recently Built")}
                 </span>
               </div>
             </div>
@@ -300,16 +353,35 @@ export default async function PropertyDetailPage({ params }: Props) {
           <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-2xs space-y-4">
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
               <FileText className="h-4 w-4 text-emerald-700" />
-              <span>物件アピールポイント・担当者コメント</span>
+              <span>
+                {lang === "ja"
+                  ? "物件アピールポイント・担当者コメント"
+                  : "Property Highlights & Agent Notes"}
+              </span>
             </h3>
-            {property.descriptionJa && (
-              <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-medium">
-                {property.descriptionJa}
-              </p>
+            {lang === "en" ? (
+              <>
+                <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-medium">
+                  {property.description}
+                </p>
+                {property.descriptionJa && (
+                  <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-line border-t border-slate-100 pt-3">
+                    {property.descriptionJa}
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                {property.descriptionJa && (
+                  <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-medium">
+                    {property.descriptionJa}
+                  </p>
+                )}
+                <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-line border-t border-slate-100 pt-3">
+                  {property.description}
+                </p>
+              </>
             )}
-            <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-line border-t border-slate-100 pt-3">
-              {property.description}
-            </p>
           </div>
 
           {/* Japanese Real Estate Standards: Official 物件概要 (Property Specification Table) */}
@@ -318,133 +390,145 @@ export default async function PropertyDetailPage({ params }: Props) {
               <div className="flex items-center gap-2.5">
                 <FileText className="h-5 w-5 text-emerald-400" />
                 <h3 className="text-sm font-bold tracking-wide">
-                  物件概要 (Official Real Estate Specifications)
+                  {lang === "ja"
+                    ? "物件概要 (Official Real Estate Specifications)"
+                    : "Official Property Specifications"}
                 </h3>
               </div>
-              <span className="text-[11px] text-slate-400">宅地建物取引業法に基づく表示</span>
+              <span className="text-[11px] text-slate-400">
+                {lang === "ja" ? "宅地建物取引業法に基づく表示" : "Real Estate Business Law Compliant"}
+              </span>
             </div>
 
             <table className="w-full text-xs border-collapse">
               <tbody className="divide-y divide-slate-200">
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    物件種目
+                    {lang === "ja" ? "物件種目" : "Property Type"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4 border-r border-slate-200">
-                    {property.propertyType === "MANSION" ? "賃貸マンション (鉄筋コンクリート造)" : "賃貸アパート"}
+                    {lang === "ja"
+                      ? (property.propertyType === "MANSION" ? "賃貸マンション (鉄筋コンクリート造)" : "賃貸アパート")
+                      : (property.propertyType === "MANSION" ? "Rental Mansion (RC Structure)" : "Rental Apartment")}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    物件名・号室
+                    {lang === "ja" ? "物件名・号室" : "Residence Name"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 font-bold sm:w-1/4">
-                    {property.titleJa || property.title}
+                    {lang === "ja" ? (property.titleJa || property.title) : (property.title || property.titleJa)}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    所在地
+                    {lang === "ja" ? "所在地" : "Location"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4 border-r border-slate-200">
                     {property.address}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    交通・最寄駅
+                    {lang === "ja" ? "交通・最寄駅" : "Transit Access"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 font-semibold sm:w-1/4">
                     {property.stationLine ? `${property.stationLine} ` : ""}
-                    {property.stationName ? `${property.stationName}駅 徒歩${property.walkMinutes || 5}分` : "駅徒歩圏内"}
+                    {property.stationName
+                      ? (lang === "ja"
+                          ? `${property.stationName}駅 徒歩${property.walkMinutes || 5}分`
+                          : `${property.stationName} Stn, ${property.walkMinutes || 5}m walk`)
+                      : (lang === "ja" ? "駅徒歩圏内" : "Walking distance")}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    間取り
+                    {lang === "ja" ? "間取り" : "Layout"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 font-bold sm:w-1/4 border-r border-slate-200">
                     {property.layout || "1LDK"}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    専有面積
+                    {lang === "ja" ? "専有面積" : "Living Area"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    {property.area} ㎡ (壁芯) / 約{tsubo}坪
+                    {property.area} ㎡ {lang === "ja" ? `(壁芯) / 約${tsubo}坪` : `/ ~${tsubo} tsubo`}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    構造・規模
+                    {lang === "ja" ? "構造・規模" : "Structure / Scale"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4 border-r border-slate-200">
-                    {property.structure || "鉄筋コンクリート造 (RC) 地上12階建"}
+                    {property.structure || (lang === "ja" ? "鉄筋コンクリート造 (RC) 地上12階建" : "Reinforced Concrete (RC) 12 Stories")}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    所在階 / 向き
+                    {lang === "ja" ? "所在階 / 向き" : "Floor / Facing"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    {property.floor ? `${property.floor}階` : "3階"} / 南向き（日当たり良好）
+                    {property.floor ? `${property.floor}F` : "3F"} /{" "}
+                    {lang === "ja" ? "南向き（日当たり良好）" : "South Facing (Sunny)"}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    築年月
+                    {lang === "ja" ? "築年月" : "Year Built"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4 border-r border-slate-200">
-                    {property.yearBuilt ? `${property.yearBuilt}年` : "2020年"}
+                    {property.yearBuilt ? `${property.yearBuilt}` : "2020"}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    契約期間
+                    {lang === "ja" ? "契約期間" : "Lease Term"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    普通借家契約 2年間 (更新可能)
+                    {lang === "ja" ? "普通借家契約 2年間 (更新可能)" : "Standard 2-Year Lease (Renewable)"}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    敷金 / 礼金
+                    {lang === "ja" ? "敷金 / 礼金" : "Deposit / Key Money"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 font-semibold sm:w-1/4 border-r border-slate-200">
-                    {property.deposit ? `${(property.deposit / property.price).toFixed(0)}ヶ月` : "敷金なし"} /{" "}
-                    {property.keyMoney ? `${(property.keyMoney / property.price).toFixed(0)}ヶ月` : "礼金なし"}
+                    {property.deposit ? `${(property.deposit / property.price).toFixed(0)}${lang === "ja" ? "ヶ月" : "mo"}` : (lang === "ja" ? "敷金なし" : "¥0")}{" "}
+                    /{" "}
+                    {property.keyMoney ? `${(property.keyMoney / property.price).toFixed(0)}${lang === "ja" ? "ヶ月" : "mo"}` : (lang === "ja" ? "礼金なし" : "¥0")}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    更新料
+                    {lang === "ja" ? "更新料" : "Renewal Fee"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    新賃料の1ヶ月分
+                    {lang === "ja" ? "新賃料の1ヶ月分" : "1 month renewal fee"}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    現況・入居時期
+                    {lang === "ja" ? "現況・入居時期" : "Status & Move-in"}
                   </th>
                   <td className="px-4 py-3 text-emerald-800 font-bold sm:w-1/4 border-r border-slate-200">
-                    空室 / 即入居可 (即時内見可能)
+                    {lang === "ja" ? "空室 / 即入居可 (即時内見可能)" : "Vacant / Immediate Move-in (Tours OK)"}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    取引態様
+                    {lang === "ja" ? "取引態様" : "Brokerage Type"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    媒介（仲介）
+                    {lang === "ja" ? "媒介（仲介）" : "Exclusive Brokerage"}
                   </td>
                 </tr>
 
                 <tr className="flex flex-col sm:table-row">
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    情報更新日
+                    {lang === "ja" ? "情報更新日" : "Updated Date"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4 border-r border-slate-200">
                     {formatDate(property.publishedAt || property.createdAt)}
                   </td>
                   <th className="bg-slate-50 px-4 py-3 text-left font-bold text-slate-700 sm:w-1/4 border-r border-slate-200">
-                    次回更新予定日
+                    {lang === "ja" ? "次回更新予定日" : "Next Scheduled Update"}
                   </th>
                   <td className="px-4 py-3 text-slate-900 sm:w-1/4">
-                    更新日より14日以内
+                    {lang === "ja" ? "更新日より14日以内" : "Within 14 days"}
                   </td>
                 </tr>
               </tbody>
@@ -465,7 +549,9 @@ export default async function PropertyDetailPage({ params }: Props) {
           <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-2xs space-y-4">
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
               <CheckCircle2 className="h-4 w-4 text-emerald-700" />
-              <span>設備・こだわり条件 (Amenities &amp; Features)</span>
+              <span>
+                {lang === "ja" ? "設備・こだわり条件 (Amenities & Features)" : "Amenities & Building Features"}
+              </span>
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
               {property.amenities.map((item) => (
@@ -475,14 +561,16 @@ export default async function PropertyDetailPage({ params }: Props) {
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                   <span>
-                    {item.amenity.nameJa ? `${item.amenity.nameJa}` : item.amenity.name}
+                    {lang === "ja"
+                      ? (item.amenity.nameJa || item.amenity.name)
+                      : (item.amenity.name || item.amenity.nameJa)}
                   </span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Mortgage / Investment Calculator (for buyers or rent affordability) */}
+          {/* Mortgage / Investment Calculator */}
           <MortgageCalculator
             price={property.price}
             currency={property.currency}
@@ -492,9 +580,14 @@ export default async function PropertyDetailPage({ params }: Props) {
           {/* Neighborhood & Surrounding Living Environment */}
           <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-2xs space-y-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">周辺環境・生活インフラ (Neighborhood &amp; Access)</h3>
+              <h3 className="text-base font-bold text-slate-900">
+                {lang === "ja" ? "周辺環境・生活インフラ (Neighborhood & Access)" : "Neighborhood & Access"}
+              </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                {property.neighborhood?.nameJa || property.neighborhood?.name}, {property.city.nameJa || property.city.name}
+                {lang === "ja"
+                  ? (property.neighborhood?.nameJa || property.neighborhood?.name)
+                  : (property.neighborhood?.name || property.neighborhood?.nameJa)}
+                , {lang === "ja" ? (property.city.nameJa || property.city.name) : property.city.name}
               </p>
             </div>
 
@@ -502,33 +595,41 @@ export default async function PropertyDetailPage({ params }: Props) {
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold mb-1">
                   <Train className="h-4 w-4" />
-                  <span>最寄駅アクセス</span>
+                  <span>{lang === "ja" ? "最寄駅アクセス" : "Transit Access"}</span>
                 </div>
-                <p className="text-slate-600 font-medium">徒歩5分以内（平坦な舗装歩道）</p>
+                <p className="text-slate-600 font-medium">
+                  {lang === "ja" ? "徒歩5分以内（平坦な舗装歩道）" : "Under 5m walk (Flat sidewalk)"}
+                </p>
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold mb-1">
                   <Utensils className="h-4 w-4" />
-                  <span>スーパー・コンビニ</span>
+                  <span>{lang === "ja" ? "スーパー・コンビニ" : "Supermarket & Stores"}</span>
                 </div>
-                <p className="text-slate-600 font-medium">セブンイレブン徒歩2分 / スーパー徒歩4分</p>
+                <p className="text-slate-600 font-medium">
+                  {lang === "ja" ? "セブンイレブン徒歩2分 / スーパー徒歩4分" : "7-Eleven 2m / Supermarket 4m"}
+                </p>
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold mb-1">
                   <GraduationCap className="h-4 w-4" />
-                  <span>教育・公共機関</span>
+                  <span>{lang === "ja" ? "教育・公共機関" : "Public Services"}</span>
                 </div>
-                <p className="text-slate-600 font-medium">区立図書館・区役所出張所 徒歩8分</p>
+                <p className="text-slate-600 font-medium">
+                  {lang === "ja" ? "区立図書館・区役所出張所 徒歩8分" : "Ward library & office 8m walk"}
+                </p>
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold mb-1">
                   <TreePine className="h-4 w-4" />
-                  <span>公園・自然環境</span>
+                  <span>{lang === "ja" ? "公園・自然環境" : "Parks & Nature"}</span>
                 </div>
-                <p className="text-slate-600 font-medium">緑道沿い・閑静な住宅街エリア</p>
+                <p className="text-slate-600 font-medium">
+                  {lang === "ja" ? "緑道沿い・閑静な住宅街エリア" : "Greenway path in quiet residential area"}
+                </p>
               </div>
             </div>
           </div>
@@ -549,30 +650,36 @@ export default async function PropertyDetailPage({ params }: Props) {
               <div>
                 <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>専任宅地建物取引士</span>
+                  <span>{lang === "ja" ? "専任宅地建物取引士" : "Certified Licensed Agent"}</span>
                 </div>
-                <h4 className="text-base font-bold text-slate-900">{property.agent?.name || "佐藤 健一 (Kenichi Sato)"}</h4>
-                <p className="text-xs text-slate-500 font-medium">{property.agency?.name || "三井ヘイブン不動産アドバイザリー"}</p>
+                <h4 className="text-base font-bold text-slate-900">
+                  {property.agent?.name || "佐藤 健一 (Kenichi Sato)"}
+                </h4>
+                <p className="text-xs text-slate-500 font-medium">
+                  {property.agency?.name || "三井ヘイブン不動産アドバイザリー"}
+                </p>
               </div>
             </div>
 
             <div className="rounded-lg bg-slate-50 p-3 border border-slate-100 text-[11px] text-slate-600 space-y-1">
               <div className="flex justify-between">
-                <span className="text-slate-400">免許証番号:</span>
+                <span className="text-slate-400">{lang === "ja" ? "免許証番号:" : "License No:"}</span>
                 <span className="font-semibold text-slate-800">国土交通大臣 (3) 第88204号</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">所属団体:</span>
+                <span className="text-slate-400">{lang === "ja" ? "所属団体:" : "Association:"}</span>
                 <span className="font-semibold text-slate-800">(一社)不動産流通経営協会</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">保証協会:</span>
+                <span className="text-slate-400">{lang === "ja" ? "保証協会:" : "Guarantee:"}</span>
                 <span className="font-semibold text-slate-800">(公社)不動産保証協会</span>
               </div>
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed">
-              {property.agent?.bio || "東京・主要ターミナル駅周辺の賃貸・売買仲介に15年以上携わっております。初期費用交渉やオンライン内見もお気軽にお申し付けください。"}
+              {lang === "ja"
+                ? (property.agent?.bio || "東京・主要ターミナル駅周辺の賃貸・売買仲介に15年以上携わっております。初期費用交渉やオンライン内見もお気軽にお申し付けください。")
+                : "Over 15 years experience in Tokyo central residential rentals and sales. Happy to assist with negotiations and remote video tours."}
             </p>
 
             <div className="space-y-2 pt-1 text-xs">
@@ -581,9 +688,13 @@ export default async function PropertyDetailPage({ params }: Props) {
                   <Phone className="h-4 w-4 text-emerald-700" />
                   <span className="font-bold">{property.agent?.phone || "0120-800-928"}</span>
                 </div>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-200/80 px-1.5 py-0.5 rounded">通話無料</span>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-200/80 px-1.5 py-0.5 rounded">
+                  {lang === "ja" ? "通話無料" : "Toll Free"}
+                </span>
               </div>
-              <p className="text-[10px] text-slate-400 text-center">営業時間: 09:30〜19:00（水曜定休）</p>
+              <p className="text-[10px] text-slate-400 text-center">
+                {lang === "ja" ? "営業時間: 09:30〜19:00（水曜定休）" : "Hours: 09:30 - 19:00 (Wed Closed)"}
+              </p>
             </div>
           </div>
         </div>
@@ -594,14 +705,20 @@ export default async function PropertyDetailPage({ params }: Props) {
         <div className="mt-16 pt-10 border-t border-slate-200">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight">この物件を見た人はここもチェックしています</h3>
-              <p className="text-xs text-slate-500 mt-0.5">{property.city.nameJa || property.city.name}の類似条件物件</p>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                {lang === "ja" ? "この物件を見た人はここもチェックしています" : "People Also Viewed Similar Residences"}
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {lang === "ja"
+                  ? `${property.city.nameJa || property.city.name}の類似条件物件`
+                  : `Similar units in ${property.city.name}`}
+              </p>
             </div>
             <Link
               href={`/search?city=${property.city.slug}&type=${property.listingType}`}
               className="text-xs font-bold text-emerald-700 hover:underline"
             >
-              類似物件をすべて見る →
+              {lang === "ja" ? "類似物件をすべて見る →" : "View all similar listings →"}
             </Link>
           </div>
 

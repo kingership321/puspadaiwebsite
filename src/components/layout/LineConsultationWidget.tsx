@@ -2,17 +2,24 @@
 
 import React, { useState } from "react";
 import { MessageCircle, X, CheckCircle2, ShieldCheck, QrCode, Sparkles, Send, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function LineConsultationWidget() {
+  const { lang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
 
-  const QUICK_QUESTIONS = [
+  const QUICK_QUESTIONS = lang === "ja" ? [
     "気になるお部屋の最新の空室状況を知りたい",
     "敷金・礼金0円で初期費用を抑えて入居したい",
     "遠方に住んでいるので、オンライン内見を予約したい",
     "はじめての一人暮らしで家賃の目安を相談したい",
+  ] : [
+    "Check vacancy for an apartment I like",
+    "Find zero deposit/key money units to save move-in costs",
+    "Book an online video tour (remote viewing)",
+    "First time living alone, need budget consultation",
   ];
 
   const handleCopyId = () => {
@@ -28,7 +35,7 @@ export function LineConsultationWidget() {
         {!isOpen && (
           <div className="hidden sm:flex items-center gap-1.5 bg-white/95 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border border-slate-200/80 animate-fade-in">
             <span className="h-2 w-2 rounded-full bg-[#06C755] animate-ping" />
-            <span>LINEでサクッと相談・内見予約</span>
+            <span>{lang === "ja" ? "LINEでサクッと相談・内見予約" : "Quick LINE Consult & Tour Booking"}</span>
           </div>
         )}
 
@@ -36,7 +43,7 @@ export function LineConsultationWidget() {
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="group relative flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white shadow-xl shadow-[#06C755]/35 hover:scale-105 transition-all duration-300 animate-line-pulse"
-          aria-label="LINEで無料相談する"
+          aria-label={lang === "ja" ? "LINEで無料相談する" : "Free Consultation on LINE"}
         >
           {isOpen ? (
             <X className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -71,13 +78,17 @@ export function LineConsultationWidget() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <h3 className="text-sm sm:text-base font-black">HavenSUUMO 公式LINE</h3>
+                      <h3 className="text-sm sm:text-base font-black">
+                        {lang === "ja" ? "HavenSUUMO 公式LINE" : "HavenSUUMO Official LINE"}
+                      </h3>
                       <span className="bg-white/25 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
-                        24h受付
+                        {lang === "ja" ? "24h受付" : "24/7"}
                       </span>
                     </div>
                     <p className="text-[11px] sm:text-xs text-emerald-50 mt-0.5">
-                      お部屋探し相談・オンライン内見・初期費用見積もり
+                      {lang === "ja"
+                        ? "お部屋探し相談・オンライン内見・初期費用見積もり"
+                        : "Housing Advice • Online Tours • Move-In Estimates"}
                     </p>
                   </div>
                 </div>
@@ -93,7 +104,11 @@ export function LineConsultationWidget() {
               {/* Gen-Z Peace of Mind Banner */}
               <div className="mt-3 flex items-center gap-2 rounded-xl bg-black/15 px-3 py-1.5 text-[10px] sm:text-[11px] font-bold text-emerald-100">
                 <ShieldCheck className="h-4 w-4 text-emerald-200 shrink-0" />
-                <span>しつこい営業電話は一切ありません。チャットのみで完結！</span>
+                <span>
+                  {lang === "ja"
+                    ? "しつこい営業電話は一切ありません。チャットのみで完結！"
+                    : "No aggressive sales calls. 100% completed via chat!"}
+                </span>
               </div>
             </div>
 
@@ -102,7 +117,9 @@ export function LineConsultationWidget() {
               {/* Step Prompt */}
               <div>
                 <p className="text-xs font-bold text-slate-500 mb-2">
-                  気になる内容をタップすると、LINEですぐに質問できます：
+                  {lang === "ja"
+                    ? "気になる内容をタップすると、LINEですぐに質問できます："
+                    : "Tap a topic to quickly ask on LINE:"}
                 </p>
                 <div className="space-y-1.5">
                   {QUICK_QUESTIONS.map((q, idx) => {
@@ -137,7 +154,9 @@ export function LineConsultationWidget() {
                     <QrCode className="h-7 w-7 text-slate-800" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 font-bold block">LINE ID 検索</span>
+                    <span className="text-[10px] text-slate-400 font-bold block">
+                      {lang === "ja" ? "LINE ID 検索" : "LINE ID Search"}
+                    </span>
                     <span className="text-sm font-mono font-black text-slate-900">@havensuumo</span>
                   </div>
                 </div>
@@ -146,7 +165,9 @@ export function LineConsultationWidget() {
                   onClick={handleCopyId}
                   className="rounded-lg bg-white border border-slate-200 hover:bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition-colors shadow-2xs"
                 >
-                  {copied ? "コピー完了！" : "IDコピー"}
+                  {copied
+                    ? (lang === "ja" ? "コピー完了！" : "Copied!")
+                    : (lang === "ja" ? "IDコピー" : "Copy ID")}
                 </button>
               </div>
 
@@ -159,12 +180,16 @@ export function LineConsultationWidget() {
                   className="flex items-center justify-center gap-2 w-full rounded-2xl bg-[#06C755] hover:bg-[#05b34c] py-3 text-sm font-black text-white shadow-md shadow-[#06C755]/25 transition-all hover:scale-[1.01]"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span>LINE友だち追加して相談する</span>
+                  <span>
+                    {lang === "ja" ? "LINE友だち追加して相談する" : "Add Friend on LINE & Inquire"}
+                  </span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
 
                 <p className="text-[10px] text-center text-slate-400">
-                  平日・休日も専任のルームアドバイザーがスピーディーに返信いたします。
+                  {lang === "ja"
+                    ? "平日・休日も専任のルームアドバイザーがスピーディーに返信いたします。"
+                    : "Dedicated advisors reply quickly on weekdays and weekends."}
                 </p>
               </div>
             </div>

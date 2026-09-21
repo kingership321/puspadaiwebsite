@@ -7,11 +7,14 @@ import { InquiryModal } from "@/components/property/InquiryModal";
 import { ShareModal } from "@/components/property/ShareModal";
 import { Heart, Share2, Calendar, FileText, Check, PhoneCall, Sparkles } from "lucide-react";
 
+import { useLanguage } from "@/lib/LanguageContext";
+
 interface Props {
   property: PropertyDto;
 }
 
 export function PropertyDetailClientActions({ property }: Props) {
+  const { lang } = useLanguage();
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [inquiryType, setInquiryType] = useState<"MESSAGE" | "TOUR">("TOUR");
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -51,7 +54,7 @@ export function PropertyDetailClientActions({ property }: Props) {
           <div className="flex items-center gap-1.5">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-xs font-bold text-slate-800">
-              内見・空室お問い合わせ (無料)
+              {lang === "ja" ? "内見・空室お問い合わせ (無料)" : "Inquire & Schedule Tour (Free)"}
             </span>
           </div>
 
@@ -64,7 +67,7 @@ export function PropertyDetailClientActions({ property }: Props) {
                   ? "border-rose-300 bg-rose-50 text-rose-600"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-rose-500"
               }`}
-              title="お気に入りに追加"
+              title={lang === "ja" ? "お気に入りに追加" : "Save to favorites"}
             >
               <Heart className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} />
             </button>
@@ -72,7 +75,7 @@ export function PropertyDetailClientActions({ property }: Props) {
             <button
               onClick={() => setShareModalOpen(true)}
               className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all active:scale-95"
-              title="物件を共有"
+              title={lang === "ja" ? "物件を共有" : "Share property"}
             >
               <Share2 className="h-4 w-4" />
             </button>
@@ -87,7 +90,7 @@ export function PropertyDetailClientActions({ property }: Props) {
             onClick={() => handleOpenInquiry("TOUR")}
           >
             <Calendar className="h-4 w-4" />
-            <span>空室確認・内見予約をする（無料）</span>
+            <span>{lang === "ja" ? "空室確認・内見予約をする（無料）" : "Check Vacancy & Book Viewing (Free)"}</span>
           </button>
 
           <button
@@ -96,18 +99,18 @@ export function PropertyDetailClientActions({ property }: Props) {
             onClick={() => handleOpenInquiry("MESSAGE")}
           >
             <FileText className="h-4 w-4" />
-            <span>最新の資料・間取り図を取り寄せる</span>
+            <span>{lang === "ja" ? "最新の資料・間取り図を取り寄せる" : "Request Floorplan & Brochure"}</span>
           </button>
         </div>
 
         <div className="rounded-xl bg-slate-50 p-2.5 text-[11px] text-slate-600 space-y-1">
           <div className="flex items-center gap-1.5 font-medium">
             <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-            <span>現地待ち合わせ・オンライン内見可能</span>
+            <span>{lang === "ja" ? "現地待ち合わせ・オンライン内見可能" : "On-site meetup & online tours available"}</span>
           </div>
           <div className="flex items-center gap-1.5 font-medium">
             <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-            <span>宅建士が最新の空室状況を即日ご返答</span>
+            <span>{lang === "ja" ? "宅建士が最新の空室状況を即日ご返答" : "Same-day response from licensed agents"}</span>
           </div>
         </div>
       </div>

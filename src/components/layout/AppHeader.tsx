@@ -306,7 +306,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                         className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                       >
                         <User className="h-4 w-4 text-slate-500" />
-                        <span>My Account (マイページ)</span>
+                        <span>{lang === "ja" ? "マイページ" : "My Account"}</span>
                       </Link>
 
                       {(currentRole === "OWNER" || currentRole === "AGENT") && (
@@ -316,7 +316,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                           className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-50"
                         >
                           <PlusCircle className="h-4 w-4 text-amber-600" />
-                          <span>Post Housing (物件掲載)</span>
+                          <span>{lang === "ja" ? "物件掲載" : "Post Housing"}</span>
                         </Link>
                       )}
 
@@ -327,7 +327,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                           className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                         >
                           <Briefcase className="h-4 w-4 text-slate-500" />
-                          <span>Management Dashboard</span>
+                          <span>{lang === "ja" ? "管理画面" : "Dashboard"}</span>
                         </Link>
                       )}
 
@@ -338,7 +338,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                           className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-50"
                         >
                           <ShieldCheck className="h-4 w-4 text-purple-600" />
-                          <span>Admin Moderation Center</span>
+                          <span>{lang === "ja" ? "管理ポータル" : "Admin Center"}</span>
                         </Link>
                       )}
                     </div>
@@ -347,7 +347,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                     <div className="py-1 px-2">
                       <p className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
                         <Sparkles className="h-3 w-3 text-amber-500" />
-                        Switch Persona (体験切替)
+                        {lang === "ja" ? "ロール切替 (体験)" : "Switch Persona"}
                       </p>
                       <div className="grid grid-cols-2 gap-1">
                         {(["SEEKER", "OWNER", "AGENT", "ADMIN"] as UserRole[]).map((r) => (
@@ -374,7 +374,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                         className="flex w-full items-center gap-2.5 px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
                       >
                         <LogOut className="h-4 w-4" />
-                        <span>Log Out (ログアウト)</span>
+                        <span>{lang === "ja" ? "ログアウト" : "Log Out"}</span>
                       </button>
                     </div>
                   </div>
@@ -412,7 +412,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                   className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shrink-0 whitespace-nowrap"
                 >
                   <User className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                  <span className="shrink-0 whitespace-nowrap">My Account</span>
+                  <span className="shrink-0 whitespace-nowrap">{lang === "ja" ? "マイページ" : "My Account"}</span>
                 </Link>
               )}
             </>
@@ -507,7 +507,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                   <User className="h-4 w-4 text-slate-500" />
-                  My Account (マイページ)
+                  {lang === "ja" ? "マイページ" : "My Account"}
                 </Link>
 
                 {(currentRole === "OWNER" || currentRole === "AGENT") && (
@@ -517,7 +517,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                     className="flex items-center gap-2 rounded-lg bg-amber-50 text-amber-700 px-3 py-2 text-sm font-semibold"
                   >
                     <PlusCircle className="h-4 w-4" />
-                    Post Housing (物件掲載)
+                    {lang === "ja" ? "物件掲載" : "Post Housing"}
                   </Link>
                 )}
 
@@ -528,7 +528,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                     className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700"
                   >
                     <Briefcase className="h-4 w-4 text-slate-600" />
-                    Management Dashboard
+                    {lang === "ja" ? "管理画面" : "Dashboard"}
                   </Link>
                 )}
 
@@ -539,7 +539,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                     className="flex items-center gap-2 rounded-lg bg-purple-50 text-purple-700 px-3 py-2 text-sm font-semibold"
                   >
                     <ShieldCheck className="h-4 w-4" />
-                    Admin Moderation
+                    {lang === "ja" ? "管理者ポータル" : "Admin Moderation"}
                   </Link>
                 )}
 
@@ -551,7 +551,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-rose-600 hover:bg-rose-50"
                 >
                   <LogOut className="h-4 w-4" />
-                  Log Out (ログアウト)
+                  {lang === "ja" ? "ログアウト" : "Log Out"}
                 </button>
               </>
             )}

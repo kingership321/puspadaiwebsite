@@ -30,10 +30,12 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { lang, t } = useLanguage();
 
   const [properties, setProperties] = useState<PropertyDto[]>([]);
   const [totalResults, setTotalResults] = useState(0);
@@ -184,10 +186,10 @@ function SearchContent() {
                   onClick={() => updateQuery({ page: (currentPage - 1).toString() })}
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
+                  {lang === "ja" ? "前へ" : "Previous"}
                 </Button>
                 <span className="text-xs font-semibold text-slate-600 px-3">
-                  Page {currentPage} of {totalPages}
+                  {lang === "ja" ? `${currentPage} / ${totalPages} ページ` : `Page ${currentPage} of ${totalPages}`}
                 </span>
                 <Button
                   variant="outline"
@@ -195,7 +197,7 @@ function SearchContent() {
                   disabled={currentPage >= totalPages}
                   onClick={() => updateQuery({ page: (currentPage + 1).toString() })}
                 >
-                  Next
+                  {lang === "ja" ? "次へ" : "Next"}
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
@@ -293,19 +295,20 @@ function SearchContent() {
 }
 
 function EmptyState({ onClearAll }: { onClearAll: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center my-8">
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 mb-4">
         <Home className="h-8 w-8" />
       </div>
-      <h3 className="text-xl font-bold text-slate-900">No Matching Properties Found</h3>
+      <h3 className="text-xl font-bold text-slate-900">{t.noResultsTitle}</h3>
       <p className="mt-2 text-sm text-slate-500 max-w-md">
-        We couldn't locate any listings matching your current combination of filters. Try broadening your search criteria or resetting filters.
+        {t.noResultsDesc}
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <Button variant="primary" size="md" onClick={onClearAll}>
           <RefreshCw className="h-4 w-4 mr-1.5" />
-          Reset All Filters
+          {t.resetAll}
         </Button>
       </div>
     </div>

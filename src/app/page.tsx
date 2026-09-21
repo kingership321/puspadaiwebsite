@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { PropertyDto } from "@/types";
 
-export const revalidate = 60; // Revalidate every 60s
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const cookieStore = cookies();
