@@ -118,12 +118,10 @@ export function PropertyCard({
             <span className="bg-rose-500 text-white px-2 py-0.5 text-[10px] font-black rounded-full shadow-2xs animate-pulse">
               敷0・礼0
             </span>
-          )}
-
           {property.featured && (
             <span className="bg-amber-500 text-white px-2 py-0.5 text-[10px] font-black rounded-full shadow-2xs flex items-center gap-0.5">
               <Sparkles className="h-2.5 w-2.5" />
-              <span>推し物件</span>
+              <span>{lang === "ja" ? "推し物件" : "Featured"}</span>
             </span>
           )}
         </div>
@@ -134,7 +132,7 @@ export function PropertyCard({
             type="button"
             onClick={handleCompareClick}
             aria-label="Compare property"
-            title="比較リストに追加"
+            title={lang === "ja" ? "比較リストに追加" : "Add to comparison"}
             className={`flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
               compared
                 ? "bg-emerald-600 text-white"
@@ -148,7 +146,7 @@ export function PropertyCard({
             type="button"
             onClick={handleFavClick}
             aria-label="Save to favorites"
-            title="お気に入りに保存"
+            title={lang === "ja" ? "お気に入りに保存" : "Save to favorites"}
             className={`flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow transition-transform active:scale-90 ${
               favorite
                 ? "bg-rose-500 text-white"
@@ -179,13 +177,17 @@ export function PropertyCard({
                   {lang === "ja" ? "管理費: " : "Fee: "}¥{property.managementFee.toLocaleString()}
                 </span>
               ) : isRent ? (
-                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">管理費込</span>
+                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                  {lang === "ja" ? "管理費込" : "Fee Included"}
+                </span>
               ) : null}
             </div>
 
             {isRent && (
               <div className="text-[10px] font-bold text-slate-600 bg-slate-100/90 px-2 py-0.5 rounded-full">
-                敷{isShikikinZero ? "0" : `${(property.deposit! / property.price).toFixed(0)}`} / 礼{isReikinZero ? "0" : `${(property.keyMoney! / property.price).toFixed(0)}`}
+                {lang === "ja"
+                  ? `敷${isShikikinZero ? "0" : `${(property.deposit! / property.price).toFixed(0)}`} / 礼${isReikinZero ? "0" : `${(property.keyMoney! / property.price).toFixed(0)}`}`
+                  : `Dep: ${isShikikinZero ? "0" : `${(property.deposit! / property.price).toFixed(0)}mo`} / Key: ${isReikinZero ? "0" : `${(property.keyMoney! / property.price).toFixed(0)}mo`}`}
               </div>
             )}
           </div>
@@ -203,9 +205,9 @@ export function PropertyCard({
               <Train className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
               <span className="truncate">
                 {property.stationLine ? `${property.stationLine} ` : ""}
-                <strong className="text-slate-900">「{property.stationName}」</strong>駅
+                <strong className="text-slate-900">「{property.stationName}」</strong>{lang === "ja" ? "駅" : " Stn"}
                 {property.walkMinutes ? (
-                  <span className="text-emerald-700 font-black"> 徒歩{property.walkMinutes}分</span>
+                  <span className="text-emerald-700 font-black"> {lang === "ja" ? `徒歩${property.walkMinutes}分` : `${property.walkMinutes}m walk`}</span>
                 ) : ""}
               </span>
             </div>
@@ -222,30 +224,33 @@ export function PropertyCard({
           {/* Specs Grid */}
           <div className="grid grid-cols-3 gap-1 rounded-xl bg-slate-50 p-1.5 sm:p-2 text-[10px] sm:text-[11px] font-semibold text-slate-700 border border-slate-200/70 text-center">
             <div>
-              <span className="text-[9px] text-slate-400 block font-medium">間取り</span>
+              <span className="text-[9px] text-slate-400 block font-medium">{lang === "ja" ? "間取り" : "Layout"}</span>
               <span className="font-bold text-slate-900">{property.layout || "1LDK"}</span>
             </div>
             <div>
-              <span className="text-[9px] text-slate-400 block font-medium">専有面積</span>
+              <span className="text-[9px] text-slate-400 block font-medium">{lang === "ja" ? "専有面積" : "Area"}</span>
               <span className="font-bold text-slate-900">
                 {property.area}㎡
               </span>
             </div>
             <div>
-              <span className="text-[9px] text-slate-400 block font-medium">構造</span>
-              <span className="font-bold text-slate-900 truncate block">{property.structure || "RC造"}</span>
+              <span className="text-[9px] text-slate-400 block font-medium">{lang === "ja" ? "構造" : "Structure"}</span>
+              <span className="font-bold text-slate-900 truncate block">{property.structure || (lang === "ja" ? "RC造" : "RC")}</span>
             </div>
           </div>
 
           {/* Lifestyle Tags */}
           <div className="flex flex-wrap gap-1 pt-0.5">
             <span className="text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
-              #独立洗面台
+              {lang === "ja" ? "#独立洗面台" : "#Vanity"}
             </span>
             <span className="text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
-              #オートロック
+              {lang === "ja" ? "#オートロック" : "#AutoLock"}
             </span>
             <span className="text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
+              {lang === "ja" ? "#2階以上" : "#Floor2+"}
+            </span>
+          </div>se-600 px-2 py-0.5 rounded-full border border-slate-200/80 transition-colors">
               #2階以上
             </span>
             {isShikikinZero && isReikinZero && (

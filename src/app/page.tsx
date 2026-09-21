@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { JapanesePortalSearch } from "@/components/search/JapanesePortalSearch";
 import { PropertyCard } from "@/components/property/PropertyCard";
@@ -28,6 +29,9 @@ import { PropertyDto } from "@/types";
 export const revalidate = 60; // Revalidate every 60s
 
 export default async function HomePage() {
+  const cookieStore = cookies();
+  const lang = (cookieStore.get("haven_lang")?.value === "en" ? "en" : "ja") as "ja" | "en";
+
   let featuredProperties: any[] = [];
   let noDepositProperties: any[] = [];
   let nearStationProperties: any[] = [];
@@ -123,21 +127,27 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 min-w-0">
             <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
-              新生活応援 2026
+              {lang === "ja" ? "新生活応援 2026" : "New Lifestyle 2026"}
             </span>
             <span className="text-emerald-50 font-medium text-xs leading-snug">
-              敷金・礼金0円＆駅近物件多数！LINEで内見・相談受付中
+              {lang === "ja"
+                ? "敷金・礼金0円＆駅近物件多数！LINEで内見・相談受付中"
+                : "Zero deposit & station-front units! Inquire & book viewings on LINE"}
             </span>
           </div>
           <div className="flex items-center justify-center md:justify-end gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold shrink-0 whitespace-nowrap">
             <span className="flex items-center gap-1 text-white shrink-0 whitespace-nowrap">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-200 shrink-0" />
-              <span className="shrink-0 whitespace-nowrap">おとり物件ゼロ</span>
+              <span className="shrink-0 whitespace-nowrap">
+                {lang === "ja" ? "おとり物件ゼロ" : "Zero Bait & Switch"}
+              </span>
             </span>
             <span className="text-emerald-300/80">•</span>
             <span className="flex items-center gap-1 text-white shrink-0 whitespace-nowrap">
               <Smartphone className="h-3.5 w-3.5 text-emerald-200 shrink-0" />
-              <span className="shrink-0 whitespace-nowrap">しつこい営業電話ナシ</span>
+              <span className="shrink-0 whitespace-nowrap">
+                {lang === "ja" ? "しつこい営業電話ナシ" : "No Sales Calls"}
+              </span>
             </span>
           </div>
         </div>
@@ -158,37 +168,54 @@ export default async function HomePage() {
           <div className="text-center max-w-3xl mx-auto space-y-2 sm:space-y-2.5">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-200/80 bg-white/95 px-3 py-0.5 text-[11px] font-black text-rose-600 shadow-2xs">
               <Sparkles className="h-3 w-3 text-rose-500" />
-              <span>いま若者に選ばれている住まい探しポータル</span>
+              <span>
+                {lang === "ja"
+                  ? "いま若者に選ばれている住まい探しポータル"
+                  : "The #1 Housing Portal Chosen by Today's Generation"}
+              </span>
             </div>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] font-black tracking-tight text-slate-900 leading-snug sm:leading-tight">
-              もっと私らしく、自由に暮らす。<br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent sm:ml-2">
-                写真とリアルな声で探すお部屋
-              </span>
+              {lang === "ja" ? (
+                <>
+                  もっと私らしく、自由に暮らす。<br className="hidden sm:inline" />
+                  <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent sm:ml-2">
+                    写真とリアルな声で探すお部屋
+                  </span>
+                </>
+              ) : (
+                <>
+                  Live Freely, More Authentically.<br className="hidden sm:inline" />
+                  <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent sm:ml-2">
+                    Find Your Room with Real Photos & Reviews
+                  </span>
+                </>
+              )}
             </h1>
 
             <p className="text-xs sm:text-[13px] text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
-              敷金礼金0円・駅近5分・デザイナーズ・推し活ルーム。LINEでサクッと相談して、来店不要でスマートに新生活を始めよう。
+              {lang === "ja"
+                ? "敷金礼金0円・駅近5分・デザイナーズ・推し活ルーム。LINEでサクッと相談して、来店不要でスマートに新生活を始めよう。"
+                : "Zero deposit, 5-min walk, designer spaces, and pet-friendly rooms. Consult quickly on LINE and start your new life without in-person visits."}
             </p>
 
             {/* Psychological Safety Badges */}
             <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 pt-0.5 text-[10.5px] sm:text-[11px] font-bold text-slate-600">
               <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
                 <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                <span>営業電話ナシ</span>
+                <span>{lang === "ja" ? "営業電話ナシ" : "No Sales Calls"}</span>
               </span>
               <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
                 <MessageCircle className="h-3 w-3 text-[#06C755]" />
-                <span>LINEで完結</span>
+                <span>{lang === "ja" ? "LINEで完結" : "100% on LINE"}</span>
               </span>
               <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
                 <Coins className="h-3 w-3 text-amber-600" />
-                <span>明朗会計</span>
+                <span>{lang === "ja" ? "明朗会計" : "Clear Pricing"}</span>
               </span>
               <span className="flex items-center gap-1 bg-white/90 px-2.5 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">
                 <Smartphone className="h-3 w-3 text-blue-600" />
-                <span>オンライン内見可</span>
+                <span>{lang === "ja" ? "オンライン内見可" : "Online Tours"}</span>
               </span>
             </div>
           </div>
@@ -202,31 +229,31 @@ export default async function HomePage() {
           <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1">
             <span className="text-slate-500 font-black text-xs mr-1 flex items-center gap-1">
               <Flame className="h-4 w-4 text-rose-500" />
-              <span>人気タグ:</span>
+              <span>{lang === "ja" ? "人気タグ:" : "Trending Tags:"}</span>
             </span>
             <Link href="/search?deposit=0&keyMoney=0" className="hashtag-pill">
-              #敷金・礼金0円
+              {lang === "ja" ? "#敷金・礼金0円" : "#ZeroDeposit"}
             </Link>
             <Link href="/search?walkMinutes=5" className="hashtag-pill">
-              #駅徒歩5分以内
+              {lang === "ja" ? "#駅徒歩5分以内" : "#Under5MinWalk"}
             </Link>
             <Link href="/search?maxPrice=80000" className="hashtag-pill">
-              #家賃8万円以下
+              {lang === "ja" ? "#家賃8万円以下" : "#Under80kYen"}
             </Link>
             <Link href="/search?query=洗面台" className="hashtag-pill">
-              #独立洗面台
+              {lang === "ja" ? "#独立洗面台" : "#SeparateVanity"}
             </Link>
             <Link href="/search?query=オートロック" className="hashtag-pill">
-              #オートロック・防犯
+              {lang === "ja" ? "#オートロック・防犯" : "#AutoLockSecurity"}
             </Link>
             <Link href="/search?propertyType=MANSION" className="hashtag-pill">
-              #デザイナーズ
+              {lang === "ja" ? "#デザイナーズ" : "#Designer"}
             </Link>
             <Link href="/search?query=ペット" className="hashtag-pill">
-              #ペットと暮らす
+              {lang === "ja" ? "#ペットと暮らす" : "#PetFriendly"}
             </Link>
             <Link href="/search?layout=1DK/1LDK" className="hashtag-pill">
-              #ふたり暮らし・同棲
+              {lang === "ja" ? "#ふたり暮らし・同棲" : "#Couples"}
             </Link>
           </div>
         </div>
@@ -240,7 +267,7 @@ export default async function HomePage() {
         {/* SECTION B: Interactive 30-Second Housing Match Quiz */}
         <LifestyleQuiz />
 
-        {/* SECTION C: Lifestyle Mood Wall (エモい条件・テーマ別コレクション) */}
+        {/* SECTION C: Lifestyle Mood Wall */}
         <LifestyleMoodWall />
 
         {/* SECTION D: Featured Properties with Staff Picks */}
@@ -252,10 +279,14 @@ export default async function HomePage() {
                 <span>STAFF PICK</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                スタッフ厳選！いまイチオシの注目物件
+                {lang === "ja"
+                  ? "スタッフ厳選！いまイチオシの注目物件"
+                  : "Staff Picks: Featured & Trending Residences"}
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                駅近・独立洗面台・敷礼ゼロなど、若者のリアルな住みやすさに徹底的にこだわったお部屋。
+                {lang === "ja"
+                  ? "駅近・独立洗面台・敷礼ゼロなど、若者のリアルな住みやすさに徹底的にこだわったお部屋。"
+                  : "Units curated for real comfort: near stations, private vanity, and zero upfront fees."}
               </p>
             </div>
 
@@ -263,7 +294,11 @@ export default async function HomePage() {
               href="/search"
               className="inline-flex items-center gap-1.5 rounded-2xl bg-white border border-slate-200 px-4 py-2 text-xs font-black text-slate-700 hover:border-rose-400 hover:text-rose-600 transition-all shadow-2xs shrink-0"
             >
-              <span>すべての物件を見る ({totalCount}件)</span>
+              <span>
+                {lang === "ja"
+                  ? `すべての物件を見る (${totalCount}件)`
+                  : `View All Properties (${totalCount})`}
+              </span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -285,15 +320,21 @@ export default async function HomePage() {
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500 text-white font-black text-xs shadow-sm">
-                  0円
+                  {lang === "ja" ? "0円" : "$0"}
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-900">敷金・礼金なし特集</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">初期費用をスマートに抑えて身軽に新生活スタート</p>
+                  <h3 className="text-base font-black text-slate-900">
+                    {lang === "ja" ? "敷金・礼金なし特集" : "Zero Deposit & Key Money Special"}
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-medium">
+                    {lang === "ja"
+                      ? "初期費用をスマートに抑えて身軽に新生活スタート"
+                      : "Cut upfront moving fees and start your life with ease"}
+                  </p>
                 </div>
               </div>
               <Link href="/search?deposit=0&keyMoney=0" className="text-xs font-black text-rose-600 hover:underline">
-                もっと見る →
+                {lang === "ja" ? "もっと見る →" : "View More →"}
               </Link>
             </div>
 
@@ -312,12 +353,18 @@ export default async function HomePage() {
                   <Train className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-900">駅近 徒歩5分以内特集</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">雨の日も夜遅くの帰宅も安心！フットワーク軽快な暮らし</p>
+                  <h3 className="text-base font-black text-slate-900">
+                    {lang === "ja" ? "駅近 徒歩5分以内特集" : "Within 5-Min Walk to Station"}
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-medium">
+                    {lang === "ja"
+                      ? "雨の日も夜遅くの帰宅も安心！フットワーク軽快な暮らし"
+                      : "Peace of mind in rain or late nights. Swift and effortless transit"}
+                  </p>
                 </div>
               </div>
               <Link href="/search?walkMinutes=5" className="text-xs font-black text-emerald-700 hover:underline">
-                もっと見る →
+                {lang === "ja" ? "もっと見る →" : "View More →"}
               </Link>
             </div>
 
@@ -334,26 +381,68 @@ export default async function HomePage() {
           <div className="border-b border-slate-200/80 pb-3">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-black text-emerald-700 mb-1">
               <Train className="h-3.5 w-3.5" />
-              <span>アクセス良好</span>
+              <span>{lang === "ja" ? "アクセス良好" : "Transit Access"}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              若者に人気の主要沿線・駅から探す
+              {lang === "ja" ? "若者に人気の主要沿線・駅から探す" : "Popular Transit Lines & Stations for Commute"}
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              通勤・通学、休日のカフェや買い物にもスムーズ。乗換なしでアクセス抜群の人気路線。
+              {lang === "ja"
+                ? "通勤・通学、休日のカフェや買い物にもスムーズ。乗換なしでアクセス抜群の人気路線。"
+                : "Direct train access for easy work commutes, weekend cafes, and shopping."}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { line: "JR山手線", area: "渋谷・新宿・原宿・恵比寿", count: "1,420", query: "山手線" },
-              { line: "東急東横線", area: "代官山・中目黒・自由が丘", count: "740", query: "東横線" },
-              { line: "東京メトロ千代田線", area: "代々木公園・表参道・赤坂", count: "680", query: "千代田線" },
-              { line: "JR中央・総武線", area: "高円寺・阿佐ヶ谷・吉祥寺", count: "920", query: "中央線" },
-              { line: "東京メトロ銀座線", area: "渋谷・表参道・銀座", count: "890", query: "銀座線" },
-              { line: "小田急線", area: "下北沢・東北沢・代々木八幡", count: "610", query: "小田急線" },
-              { line: "大阪メトロ御堂筋線", area: "梅田・本町・心斎橋・難波", count: "650", query: "御堂筋線" },
-              { line: "福岡地下鉄空港線", area: "天神・博多・大濠公園", count: "430", query: "空港線" },
+              {
+                line: lang === "ja" ? "JR山手線" : "JR Yamanote Line",
+                area: lang === "ja" ? "渋谷・新宿・原宿・恵比寿" : "Shibuya, Shinjuku, Harajuku, Ebisu",
+                count: "1,420",
+                query: "山手線",
+              },
+              {
+                line: lang === "ja" ? "東急東横線" : "Tokyu Toyoko Line",
+                area: lang === "ja" ? "代官山・中目黒・自由が丘" : "Daikanyama, Nakameguro, Jiyugaoka",
+                count: "740",
+                query: "東横線",
+              },
+              {
+                line: lang === "ja" ? "東京メトロ千代田線" : "Tokyo Metro Chiyoda Line",
+                area: lang === "ja" ? "代々木公園・表参道・赤坂" : "Yoyogi Park, Omotesando, Akasaka",
+                count: "680",
+                query: "千代田線",
+              },
+              {
+                line: lang === "ja" ? "JR中央・総武線" : "JR Chuo-Sobu Line",
+                area: lang === "ja" ? "高円寺・阿佐ヶ谷・吉祥寺" : "Koenji, Asagaya, Kichijoji",
+                count: "920",
+                query: "中央線",
+              },
+              {
+                line: lang === "ja" ? "東京メトロ銀座線" : "Tokyo Metro Ginza Line",
+                area: lang === "ja" ? "渋谷・表参道・銀座" : "Shibuya, Omotesando, Ginza",
+                count: "890",
+                query: "銀座線",
+              },
+              {
+                line: lang === "ja" ? "小田急線" : "Odakyu Line",
+                area: lang === "ja" ? "下北沢・東北沢・代々木八幡" : "Shimokitazawa, Yoyogi-Hachiman",
+                count: "610",
+                query: "小田急線",
+              },
+              {
+                line: lang === "ja" ? "大阪メトロ御堂筋線" : "Osaka Metro Midosuji Line",
+                area: lang === "ja" ? "梅田・本町・心斎橋・難波" : "Umeda, Honmachi, Shinsaibashi, Namba",
+                count: "650",
+                query: "御堂筋線",
+              },
+              {
+                line: lang === "ja" ? "福岡地下鉄空港線" : "Fukuoka Subway Kuko Line",
+                area: lang === "ja" ? "天神・博多・大濠公園" : "Tenjin, Hakata, Ohori Park",
+                count: "430",
+                query: "空港線",
+              },
             ].map((item) => (
               <Link
                 key={item.line}
@@ -365,7 +454,7 @@ export default async function HomePage() {
                     {item.line}
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono font-bold">
-                    {item.count}件
+                    {item.count}{lang === "ja" ? "件" : " units"}
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-500 block truncate">
@@ -386,10 +475,14 @@ export default async function HomePage() {
               Owner & Agent Portal
             </span>
             <h3 className="text-xl sm:text-2xl font-black tracking-tight">
-              若い世代の優良な入居者をお探しのオーナー様へ
+              {lang === "ja"
+                ? "若い世代の優良な入居者をお探しのオーナー様へ"
+                : "To Property Owners Seeking Quality Young Tenants"}
             </h3>
             <p className="text-xs text-slate-300 max-w-xl font-medium leading-relaxed">
-              スマホから写真をアップロードするだけで即日掲載。Z世代・ミレニアル世代の入居希望者とLINE・オンライン内見でスムーズにマッチングします。
+              {lang === "ja"
+                ? "スマホから写真をアップロードするだけで即日掲載。Z世代・ミレニアル世代の入居希望者とLINE・オンライン内見でスムーズにマッチングします。"
+                : "Upload photos straight from your phone for same-day listing. Seamless matching with young renters via LINE chat and online video tours."}
             </p>
           </div>
 
@@ -398,13 +491,13 @@ export default async function HomePage() {
               href="/signup"
               className="rounded-2xl bg-rose-500 hover:bg-rose-600 px-6 py-3.5 text-xs font-black text-white shadow-md shadow-rose-500/25 transition-all hover:scale-[1.02]"
             >
-              オーナー無料掲載を始める
+              {lang === "ja" ? "オーナー無料掲載を始める" : "Start Free Owner Listing"}
             </Link>
             <Link
               href="/dashboard/listings/new"
               className="rounded-2xl border border-white/30 hover:bg-white/10 px-5 py-3.5 text-xs font-bold text-white transition-all"
             >
-              物件登録画面へ
+              {lang === "ja" ? "物件登録画面へ" : "Go to Property Registration"}
             </Link>
           </div>
         </section>

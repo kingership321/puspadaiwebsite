@@ -106,12 +106,16 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
           <div className="flex items-center gap-2.5 text-[11px] shrink-0 whitespace-nowrap">
             <span className="inline-flex items-center gap-1.5 font-black text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
               <Sparkles className="h-3 w-3 text-emerald-600 shrink-0" />
-              <span className="shrink-0 whitespace-nowrap">Z世代・若者の住まい探し</span>
+              <span className="shrink-0 whitespace-nowrap">
+                {lang === "ja" ? "Z世代・若者の住まい探し" : "Housing for Gen Z & Youth"}
+              </span>
             </span>
             <span className="text-slate-300">|</span>
             <span className="text-slate-600 font-bold hidden xl:flex items-center gap-1 shrink-0 whitespace-nowrap">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-              <span className="shrink-0 whitespace-nowrap">営業電話ゼロ保証 • オンライン内見OK</span>
+              <span className="shrink-0 whitespace-nowrap">
+                {lang === "ja" ? "営業電話ゼロ保証 • オンライン内見OK" : "No Sales Calls • Online Tours OK"}
+              </span>
             </span>
           </div>
 
@@ -122,15 +126,17 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-[#06C755] font-black hover:underline shrink-0 whitespace-nowrap"
             >
-              <span className="shrink-0 whitespace-nowrap">LINEでサクッと相談</span>
+              <span className="shrink-0 whitespace-nowrap">
+                {lang === "ja" ? "LINEでサクッと相談" : "Fast Consult via LINE"}
+              </span>
               <span className="h-1.5 w-1.5 rounded-full bg-[#06C755] animate-ping shrink-0" />
             </a>
             <span className="text-slate-300">|</span>
             <Link href="/guides" className="text-slate-500 hover:text-emerald-700 transition-colors shrink-0 whitespace-nowrap">
-              一人暮らしガイド
+              {lang === "ja" ? "一人暮らしガイド" : "Living Alone Guide"}
             </Link>
             <Link href="/about" className="text-slate-500 hover:text-emerald-700 transition-colors shrink-0 whitespace-nowrap">
-              運営会社
+              {lang === "ja" ? "運営会社" : "Company Info"}
             </Link>
           </div>
         </div>
@@ -149,7 +155,7 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
                   Haven<span className="text-[#00a854]">SUUMO</span>
                 </span>
                 <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2 shrink-0 whitespace-nowrap">
-                  公式
+                  {lang === "ja" ? "公式" : "OFFICIAL"}
                 </span>
               </div>
               <span className="text-[10px] font-bold text-slate-500 mt-0.5 hidden sm:block whitespace-nowrap truncate max-w-[150px] lg:max-w-[210px]">

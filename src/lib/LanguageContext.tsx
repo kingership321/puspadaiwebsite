@@ -37,6 +37,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setLangState(newLang);
     document.cookie = `haven_lang=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
     localStorage.setItem("haven_lang", newLang);
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   };
 
   const toggleLang = () => {

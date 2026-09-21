@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Calculator, CheckCircle2, ShieldCheck, ArrowRight, Sparkles, HelpCircle, Coins } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function InitialCostExplainer() {
+  const { lang } = useLanguage();
   const [rentYen, setRentYen] = useState<number>(80000); // 8万円 default for single youth
   const [hasZeroShikikinReikin, setHasZeroShikikinReikin] = useState<boolean>(true);
   const [discountBrokerage, setDiscountBrokerage] = useState<boolean>(true);
@@ -29,21 +31,29 @@ export function InitialCostExplainer() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-black text-emerald-700">
             <Coins className="h-3.5 w-3.5 text-emerald-600" />
-            <span>初期費用の不安をゼロに</span>
+            <span>{lang === "ja" ? "初期費用の不安をゼロに" : "Zero Anxiety on Move-in Costs"}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            はじめての一人暮らし 初期費用シミュレーター
+            {lang === "ja" ? "はじめての一人暮らし 初期費用シミュレーター" : "First-Time Renter Move-in Cost Simulator"}
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            「敷金礼金0円」や「仲介手数料の割引」で、引っ越し費用がどれだけ節約できるかを即時計算！
+            {lang === "ja"
+              ? "「敷金礼金0円」や「仲介手数料の割引」で、引っ越し費用がどれだけ節約できるかを即時計算！"
+              : "Instantly calculate how much you save with 0-deposit, 0-key money and discounted agent fees!"}
           </p>
         </div>
 
         <div className="bg-amber-50 rounded-2xl p-3 border border-amber-200/70 flex items-center gap-3 shrink-0">
           <ShieldCheck className="h-6 w-6 text-amber-600 shrink-0" />
           <div className="text-[11px]">
-            <span className="font-black text-slate-900 block">不当な付帯料金ゼロ保証</span>
-            <span className="text-slate-600">不要な消臭代や安心サポート等の強制上乗せは一切ナシ</span>
+            <span className="font-black text-slate-900 block">
+              {lang === "ja" ? "不当な付帯料金ゼロ保証" : "Zero Hidden Surcharges Guarantee"}
+            </span>
+            <span className="text-slate-600">
+              {lang === "ja"
+                ? "不要な消臭代や安心サポート等の強制上乗せは一切ナシ"
+                : "No mandatory deodorizing fees or forced insurance add-ons"}
+            </span>
           </div>
         </div>
       </div>
@@ -54,9 +64,9 @@ export function InitialCostExplainer() {
           {/* Rent Slider */}
           <div>
             <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
-              <span>想定の家賃 (Rent):</span>
+              <span>{lang === "ja" ? "想定の家賃 (Rent):" : "Estimated Monthly Rent:"}</span>
               <span className="text-base sm:text-lg font-black text-rose-600">
-                {(rentYen / 10000).toFixed(1)} 万円 /月
+                {lang === "ja" ? `${(rentYen / 10000).toFixed(1)} 万円 /月` : `¥${rentYen.toLocaleString()} / mo`}
               </span>
             </div>
             <input
@@ -69,9 +79,9 @@ export function InitialCostExplainer() {
               className="w-full accent-rose-500 h-2 bg-slate-200 rounded-lg cursor-pointer"
             />
             <div className="flex justify-between text-[10px] font-semibold text-slate-400 mt-1">
-              <span>4.0万円 (学生・単身)</span>
-              <span>10.0万円 (都心標準)</span>
-              <span>20.0万円 (広々・同棲)</span>
+              <span>{lang === "ja" ? "4.0万円 (学生・単身)" : "¥40,000 (Student / Studio)"}</span>
+              <span>{lang === "ja" ? "10.0万円 (都心標準)" : "¥100,000 (Tokyo Standard)"}</span>
+              <span>{lang === "ja" ? "20.0万円 (広々・同棲)" : "¥200,000 (Spacious / Couple)"}</span>
             </div>
           </div>
 
@@ -87,9 +97,13 @@ export function InitialCostExplainer() {
               }`}
             >
               <div>
-                <span className="text-xs block">敷金0円・礼金0円</span>
+                <span className="text-xs block">
+                  {lang === "ja" ? "敷金0円・礼金0円" : "0 Deposit & 0 Key Money"}
+                </span>
                 <span className="text-[10px] text-slate-500 block">
-                  {hasZeroShikikinReikin ? "約2ヶ月分おトク！" : "通常(敷1礼1)"}
+                  {hasZeroShikikinReikin
+                    ? (lang === "ja" ? "約2ヶ月分おトク！" : "Save ~2 months rent!")
+                    : (lang === "ja" ? "通常(敷1礼1)" : "Standard (1 mo each)")}
                 </span>
               </div>
               <div
@@ -111,9 +125,13 @@ export function InitialCostExplainer() {
               }`}
             >
               <div>
-                <span className="text-xs block">仲介手数料 半額適用</span>
+                <span className="text-xs block">
+                  {lang === "ja" ? "仲介手数料 半額適用" : "50% Off Agency Fee"}
+                </span>
                 <span className="text-[10px] text-slate-500 block">
-                  {discountBrokerage ? "0.5ヶ月分節約" : "通常(1ヶ月分)"}
+                  {discountBrokerage
+                    ? (lang === "ja" ? "0.5ヶ月分節約" : "Save 0.5 month fee")
+                    : (lang === "ja" ? "通常(1ヶ月分)" : "Standard (1 month)")}
                 </span>
               </div>
               <div
@@ -130,10 +148,12 @@ export function InitialCostExplainer() {
         {/* Right: Output Summary Card */}
         <div className="lg:col-span-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-4 sm:p-6 text-white space-y-4 shadow-lg">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-3">
-            <span className="text-xs text-slate-300 font-bold">概算初期費用 (目安総額)</span>
+            <span className="text-xs text-slate-300 font-bold">
+              {lang === "ja" ? "概算初期費用 (目安総額)" : "Estimated Move-in Total"}
+            </span>
             {savedAmount > 0 && (
               <span className="bg-rose-500 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-full">
-                約 ¥{savedAmount.toLocaleString()} 節約！
+                {lang === "ja" ? `約 ¥${savedAmount.toLocaleString()} 節約！` : `Save ~¥${savedAmount.toLocaleString()}!`}
               </span>
             )}
           </div>
@@ -143,23 +163,35 @@ export function InitialCostExplainer() {
               ¥{totalCost.toLocaleString()}
             </span>
             <span className="text-xs text-slate-300">
-              (約 {(totalCost / 10000).toFixed(1)} 万円)
+              {lang === "ja" ? `(約 ${(totalCost / 10000).toFixed(1)} 万円)` : `(Total estimated)`}
             </span>
           </div>
 
           {/* Quick Breakdown Badges */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-slate-800/80 p-3 rounded-xl text-slate-300">
-            <div>前家賃＋共益費: <strong className="text-white">¥{(rentYen + managementFee).toLocaleString()}</strong></div>
-            <div>敷金・礼金: <strong className="text-white">¥{(deposit + keyMoney).toLocaleString()}</strong></div>
-            <div>仲介手数料: <strong className="text-white">¥{brokerageFee.toLocaleString()}</strong></div>
-            <div>保証会社・保険: <strong className="text-white">¥{(guaranteeFee + fireInsurance).toLocaleString()}</strong></div>
+            <div>
+              {lang === "ja" ? "前家賃＋共益費: " : "First Month Rent + Fee: "}
+              <strong className="text-white">¥{(rentYen + managementFee).toLocaleString()}</strong>
+            </div>
+            <div>
+              {lang === "ja" ? "敷金・礼金: " : "Deposit & Key Money: "}
+              <strong className="text-white">¥{(deposit + keyMoney).toLocaleString()}</strong>
+            </div>
+            <div>
+              {lang === "ja" ? "仲介手数料: " : "Brokerage Agency Fee: "}
+              <strong className="text-white">¥{brokerageFee.toLocaleString()}</strong>
+            </div>
+            <div>
+              {lang === "ja" ? "保証会社・保険: " : "Guarantor & Fire Ins.: "}
+              <strong className="text-white">¥{(guaranteeFee + fireInsurance).toLocaleString()}</strong>
+            </div>
           </div>
 
           <Link
             href={`/search?deposit=0&keyMoney=0&maxPrice=${rentYen}`}
             className="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 py-3 text-xs font-black text-white shadow-md transition-all active:scale-[0.99]"
           >
-            <span>この予算で敷礼0のお部屋を探す</span>
+            <span>{lang === "ja" ? "この予算で敷礼0のお部屋を探す" : "Find 0-Deposit Listings in This Budget"}</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

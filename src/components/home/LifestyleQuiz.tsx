@@ -3,17 +3,23 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Sparkles, Check, ArrowRight, RotateCcw, Heart, Coffee, Tv, Flame, Laptop, Compass, ShieldCheck } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface Question {
   id: number;
-  title: string;
-  subtitle: string;
+  titleJa: string;
+  titleEn: string;
+  subtitleJa: string;
+  subtitleEn: string;
   options: {
     id: string;
-    label: string;
-    sublabel: string;
+    labelJa: string;
+    labelEn: string;
+    sublabelJa: string;
+    sublabelEn: string;
     icon: any;
-    tag: string;
+    tagJa: string;
+    tagEn: string;
     queryParam: string;
   }[];
 }
@@ -21,123 +27,184 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    title: "Q1. お休みの日は、どんなふうに過ごしたい？",
-    subtitle: "あなたのライフスタイルのベースをチェック",
+    titleJa: "Q1. お休みの日は、どんなふうに過ごしたい？",
+    titleEn: "Q1. How do you love spending your days off?",
+    subtitleJa: "あなたのライフスタイルのベースをチェック",
+    subtitleEn: "Discover the foundation of your ideal living space",
     options: [
       {
         id: "homebody",
-        label: "おうちで映画・推し活・ゲーム",
-        sublabel: "居心地重視のくつろぎ空間",
+        labelJa: "おうちで映画・推し活・ゲーム",
+        labelEn: "Movies, Gaming & Fandom at Home",
+        sublabelJa: "居心地重視のくつろぎ空間",
+        sublabelEn: "Cozy haven built for pure relaxation",
         icon: Tv,
-        tag: "#推し活 #おうち時間",
+        tagJa: "#推し活 #おうち時間",
+        tagEn: "#CozyHome #FandomRoom",
         queryParam: "query=ペット",
       },
       {
         id: "cafe",
-        label: "カフェ巡り・古着・アート",
-        sublabel: "感性を刺激するおしゃれな街",
+        labelJa: "カフェ巡り・古着・アート",
+        labelEn: "Café Hopping, Vintage & Art",
+        sublabelJa: "感性を刺激するおしゃれな街",
+        sublabelEn: "Inspiring vibes in creative neighborhoods",
         icon: Coffee,
-        tag: "#カフェ風 #デザイナーズ",
+        tagJa: "#カフェ風 #デザイナーズ",
+        tagEn: "#CafeVibes #DesignerApt",
         queryParam: "propertyType=MANSION",
       },
       {
         id: "work",
-        label: "在宅ワーク・自己投資に集中",
-        sublabel: "デスク環境＆静音性重視",
+        labelJa: "在宅ワーク・自己投資に集中",
+        labelEn: "Remote Work & Personal Growth",
+        sublabelJa: "デスク環境＆静音性重視",
+        sublabelEn: "Quiet focus zone with high-speed internet",
         icon: Laptop,
-        tag: "#リモート最適 #ネット無料",
+        tagJa: "#リモート最適 #ネット無料",
+        tagEn: "#WorkFromHome #FreeWifi",
         queryParam: "walkMinutes=7",
       },
       {
         id: "active",
-        label: "サウナ・ジム・アクティブ",
-        sublabel: "駅近でフットワーク軽く",
+        labelJa: "サウナ・ジム・アクティブ",
+        labelEn: "Sauna, Fitness & City Life",
+        sublabelJa: "駅近でフットワーク軽く",
+        sublabelEn: "Steps from station for quick commutes",
         icon: Flame,
-        tag: "#駅チカ #フットワーク",
+        tagJa: "#駅チカ #フットワーク",
+        tagEn: "#CloseToStation #ActiveLife",
         queryParam: "walkMinutes=5",
       },
     ],
   },
   {
     id: 2,
-    title: "Q2. 毎日の生活で「絶対に譲れない」設備は？",
-    subtitle: "ストレスフリーな毎日のための最重要ポイント",
+    titleJa: "Q2. 毎日の生活で「絶対に譲れない」設備は？",
+    titleEn: "Q2. Which feature is an absolute must-have?",
+    subtitleJa: "ストレスフリーな毎日のための最重要ポイント",
+    subtitleEn: "The non-negotiables for a stress-free daily routine",
     options: [
       {
         id: "washbasin",
-        label: "独立洗面台",
-        sublabel: "朝のヘアメイクも快適スムーズ",
+        labelJa: "独立洗面台",
+        labelEn: "Separate Vanity / Washbasin",
+        sublabelJa: "朝のヘアメイクも快適スムーズ",
+        sublabelEn: "Effortless morning grooming & skincare",
         icon: Sparkles,
-        tag: "#独立洗面台",
+        tagJa: "#独立洗面台",
+        tagEn: "#SeparateVanity",
         queryParam: "query=洗面台",
       },
       {
         id: "autolock",
-        label: "オートロック＆2階以上",
-        sublabel: "夜遅くの帰宅も安心セキュリティ",
+        labelJa: "オートロック＆2階以上",
+        labelEn: "Auto-Lock & 2nd Floor+",
+        sublabelJa: "夜遅くの帰宅も安心セキュリティ",
+        sublabelEn: "Peace-of-mind security for late arrivals",
         icon: ShieldCheck,
-        tag: "#オートロック #女性安心",
+        tagJa: "#オートロック #女性安心",
+        tagEn: "#AutoLock #SafeLiving",
         queryParam: "query=オートロック",
       },
       {
         id: "zero",
-        label: "敷金0円・礼金0円",
-        sublabel: "初期費用をグッと抑えたい",
+        labelJa: "敷金0円・礼金0円",
+        labelEn: "Zero Deposit & Key Money",
+        sublabelJa: "初期費用をグッと抑えたい",
+        sublabelEn: "Keep upfront move-in costs as low as possible",
         icon: Heart,
-        tag: "#敷礼ゼロ #初期費用安め",
+        tagJa: "#敷礼ゼロ #初期費用安め",
+        tagEn: "#ZeroDeposit #LowMoveInCost",
         queryParam: "deposit=0&keyMoney=0",
       },
       {
         id: "walk5",
-        label: "駅徒歩5分以内",
-        sublabel: "雨の日も寝坊した朝も安心",
+        labelJa: "駅徒歩5分以内",
+        labelEn: "Within 5-Min Walk to Station",
+        sublabelJa: "雨の日も寝坊した朝も安心",
+        sublabelEn: "No umbrella needed, hassle-free commute",
         icon: Compass,
-        tag: "#駅徒歩5分 #エキチカ",
+        tagJa: "#駅徒歩5分 #エキチカ",
+        tagEn: "#5MinWalk #StationClose",
         queryParam: "walkMinutes=5",
       },
     ],
   },
 ];
 
-const ARCHETYPES: Record<string, { title: string; badge: string; desc: string; link: string; tags: string[] }> = {
+interface ArchetypeData {
+  titleJa: string;
+  titleEn: string;
+  badgeJa: string;
+  badgeEn: string;
+  descJa: string;
+  descEn: string;
+  link: string;
+  tagsJa: string[];
+  tagsEn: string[];
+}
+
+const ARCHETYPES: Record<string, ArchetypeData> = {
   default: {
-    title: "ナチュラル＆居心地重視派",
-    badge: "癒やしの暮らし",
-    desc: "陽当たり良好で木の温もりを感じるお部屋がベストマッチ。淡色インテリアや間接照明が映える空間で、毎日をごきげんに過ごせます。",
+    titleJa: "ナチュラル＆居心地重視派",
+    titleEn: "Natural & Warm Cozy Living",
+    badgeJa: "癒やしの暮らし",
+    badgeEn: "Soothing Lifestyle",
+    descJa: "陽当たり良好で木の温もりを感じるお部屋がベストマッチ。淡色インテリアや間接照明が映える空間で、毎日をごきげんに過ごせます。",
+    descEn: "Sun-drenched spaces with warm wood floors. Designed to complement minimal pastel decor and ambient lighting for relaxing days.",
     link: "/search?deposit=0&keyMoney=0",
-    tags: ["#敷礼ゼロ", "#淡色インテリア", "#独立洗面台", "#日当たり良好"],
+    tagsJa: ["#敷礼ゼロ", "#淡色インテリア", "#独立洗面台", "#日当たり良好"],
+    tagsEn: ["#ZeroDeposit", "#MinimalWood", "#SeparateVanity", "#SunnyExposure"],
   },
   homebody: {
-    title: "おこもり推し活＆リラックスタイプ",
-    badge: "推し活＆シアター",
-    desc: "白壁プロジェクターが映える広めワンルームや1LDKがおすすめ。Wi-Fi無料で動画配信もサクサク、居心地満点のプライベート空間！",
+    titleJa: "おこもり推し活＆リラックスタイプ",
+    titleEn: "Fandom & Cozy Theater Room",
+    badgeJa: "推し活＆シアター",
+    badgeEn: "Entertainment & Chill",
+    descJa: "白壁プロジェクターが映える広めワンルームや1LDKがおすすめ。Wi-Fi無料で動画配信もサクサク、居心地満点のプライベート空間！",
+    descEn: "Spacious 1R or 1LDK with large white walls for home projectors. Free high-speed Wi-Fi and soundproofing make it the ultimate private escape.",
     link: "/search?deposit=0&keyMoney=0&layout=1DK/1LDK",
-    tags: ["#推し活ルーム", "#ネット無料", "#バストイレ別", "#防音性"],
+    tagsJa: ["#推し活ルーム", "#ネット無料", "#バストイレ別", "#防音性"],
+    tagsEn: ["#TheaterRoom", "#FreeWifi", "#SeparateBathToilet", "#Soundproof"],
   },
   cafe: {
-    title: "カフェ風リノベ＆デザイナーズタイプ",
-    badge: "洗練デザイン",
-    desc: "コンクリート打ちっぱなしやアイアン素材、無垢フローリングが好きなあなたへ。下北沢・中目黒・蔵前などのカルチャー街がぴったりです。",
+    titleJa: "カフェ風リノベ＆デザイナーズタイプ",
+    titleEn: "Artistic Loft & Designer Renovation",
+    badgeJa: "洗練デザイン",
+    badgeEn: "Curated Design",
+    descJa: "コンクリート打ちっぱなしやアイアン素材、無垢フローリングが好きなあなたへ。下北沢・中目黒・蔵前などのカルチャー街がぴったりです。",
+    descEn: "Exposed concrete, iron accents, and solid wood floors. Perfect match for vibrant cultural neighborhoods like Shimokitazawa, Nakameguro, and Kuramae.",
     link: "/search?propertyType=MANSION&walkMinutes=7",
-    tags: ["#デザイナーズ", "#リノベーション", "#カフェが近い街", "#おしゃれ"],
+    tagsJa: ["#デザイナーズ", "#リノベーション", "#カフェが近い街", "#おしゃれ"],
+    tagsEn: ["#DesignerApt", "#Renovated", "#CafeDistrict", "#StylishLiving"],
   },
   work: {
-    title: "タイパ最強！スマートリモートワークタイプ",
-    badge: "スマート生活",
-    desc: "デスクとベッドのゾーニングがしやすい1LDKや、高速ネット完備の駅近物件が最適。オンオフの切り替えがスムーズな住環境をご提案！",
+    titleJa: "タイパ最強！スマートリモートワークタイプ",
+    titleEn: "High-Efficiency Smart Remote Worker",
+    badgeJa: "スマート生活",
+    badgeEn: "Smart Productivity",
+    descJa: "デスクとベッドのゾーニングがしやすい1LDKや、高速ネット完備の駅近物件が最適。オンオフの切り替えがスムーズな住環境をご提案！",
+    descEn: "A 1LDK with clear work/rest separation, high-speed fiber internet, and parcel delivery boxes. Ideal for seamless productivity and balance.",
     link: "/search?walkMinutes=5&layout=1DK/1LDK",
-    tags: ["#リモート部屋", "#宅配ボックス", "#独立洗面台", "#駅徒歩5分"],
+    tagsJa: ["#リモート部屋", "#宅配ボックス", "#独立洗面台", "#駅徒歩5分"],
+    tagsEn: ["#HomeOffice", "#DeliveryBox", "#SeparateVanity", "#5MinWalk"],
   },
   active: {
-    title: "エキチカ＆身軽フットワークタイプ",
-    badge: "駅近アクティブ",
-    desc: "主要駅まで徒歩5分以内、周辺にサウナや飲食店が充実した好立地。敷金礼金ゼロで初期費用もスマートに抑えて身軽に新生活スタート！",
+    titleJa: "エキチカ＆身軽フットワークタイプ",
+    titleEn: "Fast-Paced Urban Footwork",
+    badgeJa: "駅近アクティブ",
+    badgeEn: "Station Close & Active",
+    descJa: "主要駅まで徒歩5分以内、周辺にサウナや飲食店が充実した好立地。敷金礼金ゼロで初期費用もスマートに抑えて身軽に新生活スタート！",
+    descEn: "Under 5 minutes walk from key transit hubs, surrounded by gyms, saunas, and dining. Zero deposit makes launching your new life agile and affordable.",
     link: "/search?deposit=0&keyMoney=0&walkMinutes=5",
-    tags: ["#駅徒歩3〜5分", "#敷金礼金0円", "#24hゴミ出し可", "#コンビニ近"],
+    tagsJa: ["#駅徒歩3〜5分", "#敷金礼金0円", "#24hゴミ出し可", "#コンビニ近"],
+    tagsEn: ["#3to5MinWalk", "#ZeroDepositKeyMoney", "#24hTrash", "#NearConvenience"],
   },
 };
 
 export function LifestyleQuiz() {
+  const { lang } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [completed, setCompleted] = useState(false);
@@ -168,13 +235,15 @@ export function LifestyleQuiz() {
         <div className="text-center space-y-1.5">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1 text-xs font-black text-rose-500 shadow-2xs border border-rose-100">
             <Sparkles className="h-3.5 w-3.5 text-rose-500" />
-            <span>30秒でわかる！タイプ診断</span>
+            <span>{lang === "ja" ? "30秒でわかる！タイプ診断" : "30-Second Match Quiz"}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            あなたにぴったりの暮らし方・お部屋診断
+            {lang === "ja" ? "あなたにぴったりの暮らし方・お部屋診断" : "Find Your Ideal Lifestyle & Living Style"}
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            直感でタップするだけ！Z世代に人気のこだわり条件から、理想のマッチングをご提案。
+            {lang === "ja"
+              ? "直感でタップするだけ！Z世代に人気のこだわり条件から、理想のマッチングをご提案。"
+              : "Tap intuitively! We recommend the best listings and neighborhoods based on your daily vibes."}
           </p>
         </div>
 
@@ -196,10 +265,10 @@ export function LifestyleQuiz() {
                 STEP {currentStep + 1} / {QUESTIONS.length}
               </span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                {QUESTIONS[currentStep].title}
+                {lang === "ja" ? QUESTIONS[currentStep].titleJa : QUESTIONS[currentStep].titleEn}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                {QUESTIONS[currentStep].subtitle}
+                {lang === "ja" ? QUESTIONS[currentStep].subtitleJa : QUESTIONS[currentStep].subtitleEn}
               </p>
             </div>
 
@@ -218,13 +287,13 @@ export function LifestyleQuiz() {
                     </div>
                     <div className="flex-1">
                       <span className="text-xs font-bold text-slate-900 group-hover:text-rose-600 transition-colors block">
-                        {opt.label}
+                        {lang === "ja" ? opt.labelJa : opt.labelEn}
                       </span>
                       <span className="text-[11px] text-slate-500 block mt-0.5">
-                        {opt.sublabel}
+                        {lang === "ja" ? opt.sublabelJa : opt.sublabelEn}
                       </span>
                       <span className="inline-block text-[10px] font-bold text-rose-500/80 bg-rose-50 px-2 py-0.5 rounded-md mt-2">
-                        {opt.tag}
+                        {lang === "ja" ? opt.tagJa : opt.tagEn}
                       </span>
                     </div>
                   </button>
@@ -238,10 +307,10 @@ export function LifestyleQuiz() {
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
               <div>
                 <span className="inline-block bg-rose-100 text-rose-700 text-xs font-black px-2.5 py-0.5 rounded-full mb-1.5">
-                  {matchedArchetype.badge}
+                  {lang === "ja" ? matchedArchetype.badgeJa : matchedArchetype.badgeEn}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black text-slate-900">
-                  {matchedArchetype.title}
+                  {lang === "ja" ? matchedArchetype.titleJa : matchedArchetype.titleEn}
                 </h3>
               </div>
               <button
@@ -250,16 +319,16 @@ export function LifestyleQuiz() {
                 className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                <span>もう一度診断する</span>
+                <span>{lang === "ja" ? "もう一度診断する" : "Retake Quiz"}</span>
               </button>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-              {matchedArchetype.desc}
+              {lang === "ja" ? matchedArchetype.descJa : matchedArchetype.descEn}
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-1">
-              {matchedArchetype.tags.map((t, idx) => (
+              {(lang === "ja" ? matchedArchetype.tagsJa : matchedArchetype.tagsEn).map((t, idx) => (
                 <span key={idx} className="hashtag-pill active text-xs">
                   {t}
                 </span>
@@ -271,7 +340,7 @@ export function LifestyleQuiz() {
                 href={matchedArchetype.link}
                 className="inline-flex items-center justify-center gap-2 w-full rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 py-3.5 text-sm font-black text-white shadow-md shadow-rose-500/25 transition-all hover:scale-[1.01]"
               >
-                <span>このタイプのおすすめ物件を見る</span>
+                <span>{lang === "ja" ? "このタイプのおすすめ物件を見る" : "View Recommended Properties for This Type"}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
