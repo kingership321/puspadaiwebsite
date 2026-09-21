@@ -58,19 +58,18 @@ export function PropertyMap({
         attributionControl: false,
       });
 
-      // CartoDB Voyager Tile Layer (Modern, crisp, includes English and Japanese labels)
+      // OpenStreetMap Standard Tile Layer (100% Free, No API Key, No Watermark)
       const tileLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-          subdomains: "abcd",
           maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
         }
       ).addTo(map);
 
       // Attribution
       L.control
         .attribution({ position: "bottomright", prefix: false })
-        .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a> &copy; <a href="https://carto.com/" target="_blank" rel="noopener">CARTO</a>')
         .addTo(map);
 
       mapInstanceRef.current = map;
