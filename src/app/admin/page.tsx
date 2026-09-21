@@ -15,6 +15,11 @@ import {
   CheckCircle2,
   XCircle,
   ExternalLink,
+  MessageSquare,
+  Calendar,
+  Mail,
+  Phone,
+  ArrowRight,
 } from "lucide-react";
 
 export default async function AdminPortalPage() {
@@ -28,13 +33,16 @@ export default async function AdminPortalPage() {
   const [
     totalUsers,
     totalListings,
+    totalInquiries,
     pendingListings,
     reports,
     auditLogs,
     usersList,
+    recentInquiries,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.property.count(),
+    prisma.inquiry.count(),
     prisma.property.findMany({
       where: { status: "PENDING_REVIEW" },
       include: {
@@ -62,6 +70,17 @@ export default async function AdminPortalPage() {
       take: 8,
       orderBy: { createdAt: "desc" },
     }),
+    prisma.inquiry.findMany({
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      include: {
+        property: {
+          include: {
+            city: true,
+          },
+        },
+      },
+    }),
   ]);
 
   return (
@@ -85,8 +104,15 @@ export default async function AdminPortalPage() {
 
         <div className="flex items-center gap-2">
           <Link
+            href="/dashboard/leads"
+            className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100 flex items-center gap-1.5 transition-colors"
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            <span>Inquiries CRM ({totalInquiries})</span>
+          </Link>
+          <Link
             href="/search"
-            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
           >
             Public Marketplace
           </Link>
@@ -94,11 +120,17 @@ export default async function AdminPortalPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Registered Users</span>
           <p className="text-3xl font-black text-slate-900 mt-1">{totalUsers}</p>
           <span className="text-xs text-slate-500 mt-1 block">Seekers, Owners & Agents</span>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Properties</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{totalListings}</p>
+          <span className="text-xs text-emerald-600 font-semibold mt-1 block">Published in marketplace</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -108,9 +140,9 @@ export default async function AdminPortalPage() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Properties</span>
-          <p className="text-3xl font-black text-slate-900 mt-1">{totalListings}</p>
-          <span className="text-xs text-emerald-600 font-semibold mt-1 block">Published across 5 cities</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Client Inquiries & Tours</span>
+          <p className="text-3xl font-black text-blue-600 mt-1">{totalInquiries}</p>
+          <span className="text-xs text-blue-600 font-semibold mt-1 block">Viewing & message leads</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -184,6 +216,101 @@ export default async function AdminPortalPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Client Viewing Inquiries & Lead Management */}
+      <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden space-y-4">
+        <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <MessageSquare className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Client Inquiries & Private Viewing Requests ({totalInquiries} Total)
+              </h2>
+              <p className="text-xs text-slate-500">
+                Incoming prospective buyer and tenant viewing requests and brochure downloads.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/dashboard/leads"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-xl transition-colors shrink-0"
+          >
+            <span>Full Leads CRM</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        {recentInquiries.length === 0 ? (
+          <div className="p-8 text-center text-slate-400 text-xs">
+            No inquiries recorded yet. When users submit viewing or brochure requests, they appear here.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-slate-400 font-bold uppercase tracking-wider">
+                  <th className="p-4">Contact</th>
+                  <th className="p-4">Property</th>
+                  <th className="p-4">Type</th>
+                  <th className="p-4">Preferred Time / Note</th>
+                  <th className="p-4">Date</th>
+                  <th className="p-4">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {recentInquiries.map((inq) => (
+                  <tr key={inq.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="p-4">
+                      <p className="font-bold text-slate-900">{inq.name}</p>
+                      <p className="text-[11px] text-slate-400">{inq.email}</p>
+                      {inq.phone && <p className="text-[10px] text-slate-400">{inq.phone}</p>}
+                    </td>
+                    <td className="p-4">
+                      <p className="font-semibold text-slate-800 line-clamp-1 max-w-[200px]">
+                        {inq.property?.title}
+                      </p>
+                      <span className="text-[10px] text-slate-400">
+                        {inq.property?.city?.nameJa || inq.property?.city?.name}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span
+                        className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          inq.inquiryType === "TOUR"
+                            ? "bg-amber-100 text-amber-800"
+                            : "bg-emerald-100 text-emerald-800"
+                        }`}
+                      >
+                        {inq.inquiryType === "TOUR" ? "内見予約 (Tour)" : "資料請求 (Brochure)"}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      {inq.preferredViewingTime ? (
+                        <div className="flex items-center gap-1 text-slate-700 font-medium">
+                          <Calendar className="h-3 w-3 text-amber-500 shrink-0" />
+                          <span>{inq.preferredViewingTime}</span>
+                        </div>
+                      ) : (
+                        <span className="text-slate-400 italic">No specific time</span>
+                      )}
+                      <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{inq.message}</p>
+                    </td>
+                    <td className="p-4 text-slate-400 whitespace-nowrap">{formatDate(inq.createdAt)}</td>
+                    <td className="p-4">
+                      <span className="rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[10px] font-bold text-blue-700">
+                        {inq.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
