@@ -24,7 +24,7 @@ export function LineConsultationWidget() {
   return (
     <>
       {/* Floating Action Button on Bottom-Right */}
-      <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 flex items-center gap-2">
+      <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-3 sm:right-6 z-50 flex items-center gap-2">
         {!isOpen && (
           <div className="hidden sm:flex items-center gap-1.5 bg-white/95 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border border-slate-200/80 animate-fade-in">
             <span className="h-2 w-2 rounded-full bg-[#06C755] animate-ping" />
@@ -35,15 +35,15 @@ export function LineConsultationWidget() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="group relative flex items-center justify-center h-14 w-14 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white shadow-xl shadow-[#06C755]/35 hover:scale-105 transition-all duration-300 animate-line-pulse"
+          className="group relative flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white shadow-xl shadow-[#06C755]/35 hover:scale-105 transition-all duration-300 animate-line-pulse"
           aria-label="LINEで無料相談する"
         >
           {isOpen ? (
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5 sm:h-6 sm:w-6" />
           ) : (
             <>
               {/* Cute LINE Chat Icon */}
-              <MessageCircle className="h-7 w-7" />
+              <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
                 1
               </span>
@@ -54,13 +54,16 @@ export function LineConsultationWidget() {
 
       {/* Interactive LINE Consultation Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-fade-in">
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4 bg-slate-950/50 backdrop-blur-xs animate-fade-in"
+          onClick={() => setIsOpen(false)}
+        >
           <div
-            className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-150 transform transition-all duration-300 animate-fade-in"
+            className="relative w-full max-w-md max-h-[88vh] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-150 transform transition-all duration-300 animate-fade-in"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-[#06C755] to-[#00a854] p-5 text-white">
+            <div className="bg-gradient-to-r from-[#06C755] to-[#00a854] p-4 sm:p-5 text-white shrink-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-[#06C755] shadow-sm font-black text-lg">
@@ -68,12 +71,12 @@ export function LineConsultationWidget() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <h3 className="text-base font-black">HavenSUUMO 公式LINE</h3>
+                      <h3 className="text-sm sm:text-base font-black">HavenSUUMO 公式LINE</h3>
                       <span className="bg-white/25 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                         24h受付
                       </span>
                     </div>
-                    <p className="text-xs text-emerald-50 mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-emerald-50 mt-0.5">
                       お部屋探し相談・オンライン内見・初期費用見積もり
                     </p>
                   </div>
@@ -88,14 +91,14 @@ export function LineConsultationWidget() {
               </div>
 
               {/* Gen-Z Peace of Mind Banner */}
-              <div className="mt-3.5 flex items-center gap-2 rounded-xl bg-black/15 px-3 py-1.5 text-[11px] font-bold text-emerald-100">
+              <div className="mt-3 flex items-center gap-2 rounded-xl bg-black/15 px-3 py-1.5 text-[10px] sm:text-[11px] font-bold text-emerald-100">
                 <ShieldCheck className="h-4 w-4 text-emerald-200 shrink-0" />
                 <span>しつこい営業電話は一切ありません。チャットのみで完結！</span>
               </div>
             </div>
 
             {/* Modal Body */}
-            <div className="p-5 space-y-4">
+            <div className="p-4 sm:p-5 space-y-3.5 overflow-y-auto flex-1">
               {/* Step Prompt */}
               <div>
                 <p className="text-xs font-bold text-slate-500 mb-2">

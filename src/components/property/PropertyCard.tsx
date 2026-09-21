@@ -220,7 +220,7 @@ export function PropertyCard({
           </div>
 
           {/* Specs Grid */}
-          <div className="grid grid-cols-3 gap-1 rounded-xl bg-slate-50 p-2 text-[11px] font-semibold text-slate-700 border border-slate-200/70 text-center">
+          <div className="grid grid-cols-3 gap-1 rounded-xl bg-slate-50 p-1.5 sm:p-2 text-[10px] sm:text-[11px] font-semibold text-slate-700 border border-slate-200/70 text-center">
             <div>
               <span className="text-[9px] text-slate-400 block font-medium">間取り</span>
               <span className="font-bold text-slate-900">{property.layout || "1LDK"}</span>
@@ -233,7 +233,7 @@ export function PropertyCard({
             </div>
             <div>
               <span className="text-[9px] text-slate-400 block font-medium">構造</span>
-              <span className="font-bold text-slate-900">{property.structure || "RC造"}</span>
+              <span className="font-bold text-slate-900 truncate block">{property.structure || "RC造"}</span>
             </div>
           </div>
 
@@ -262,7 +262,7 @@ export function PropertyCard({
             href="https://line.me/R/ti/p/@havensuumo"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-xl bg-[#e8f9ee] hover:bg-[#d5f5de] text-[#06C755] font-black px-2.5 py-1.5 text-[11px] transition-colors"
+            className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#e8f9ee] hover:bg-[#d5f5de] text-[#06C755] font-black px-2.5 py-1.5 text-[11px] transition-colors shrink-0"
             title="LINEでこのお部屋の空室確認・内見予約"
           >
             <span>LINE内見</span>
@@ -270,7 +270,7 @@ export function PropertyCard({
 
           <Link
             href={`/property/${property.slug}`}
-            className="inline-flex items-center gap-1 rounded-xl bg-slate-900 hover:bg-rose-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-2xs transition-colors"
+            className="inline-flex items-center justify-center gap-1 rounded-xl bg-slate-900 hover:bg-rose-600 px-3 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-bold text-white shadow-2xs transition-colors shrink-0"
           >
             <span>詳細を見る</span>
             <ChevronRight className="h-3 w-3" />

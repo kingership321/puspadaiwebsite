@@ -89,16 +89,19 @@ export function YouthAreaStories() {
       </div>
 
       {/* Horizontal Story Reel */}
-      <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-2 pt-1 no-scrollbar scroll-smooth">
+      <div
+        className="flex items-center gap-3.5 sm:gap-6 overflow-x-auto pb-2.5 pt-1 no-scrollbar scroll-smooth touch-pan-x"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         {YOUTH_AREAS.map((area) => (
           <Link
             key={area.id}
             href={`/search?query=${encodeURIComponent(area.query)}`}
-            className="group flex flex-col items-center shrink-0 text-center w-20 sm:w-24 transition-transform active:scale-95"
+            className="group flex flex-col items-center shrink-0 text-center w-[72px] sm:w-24 transition-transform active:scale-95"
           >
             {/* Story Gradient Ring */}
             <div className="story-avatar-ring mb-1.5">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-white bg-slate-100">
+              <div className="h-14 w-14 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-white bg-slate-100">
                 <img
                   src={area.imageUrl}
                   alt={area.name}

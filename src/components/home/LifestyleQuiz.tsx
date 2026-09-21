@@ -162,8 +162,8 @@ export function LifestyleQuiz() {
   const matchedArchetype = answers[0] ? ARCHETYPES[answers[0]] || ARCHETYPES.default : ARCHETYPES.default;
 
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-amber-50/70 via-rose-50/30 to-emerald-50/50 p-5 sm:p-8 border border-slate-200/90 shadow-sm">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="rounded-3xl bg-gradient-to-br from-amber-50/70 via-rose-50/30 to-emerald-50/50 p-4 sm:p-8 border border-slate-200/90 shadow-sm">
+      <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
         {/* Quiz Header */}
         <div className="text-center space-y-1.5">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1 text-xs font-black text-rose-500 shadow-2xs border border-rose-100">

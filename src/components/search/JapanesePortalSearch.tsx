@@ -152,14 +152,14 @@ export function JapanesePortalSearch() {
       </div>
 
       {/* 2. Main Search Pathway Tabs */}
-      <div className="grid grid-cols-4 bg-slate-50/90 border-b border-slate-200 text-xs font-bold">
+      <div className="grid grid-cols-2 sm:grid-cols-4 bg-slate-50/90 border-b border-slate-200 text-xs font-bold divide-x divide-y sm:divide-y-0 divide-slate-200/80">
         <button
           type="button"
           onClick={() => setActiveTab("train")}
-          className={`flex items-center justify-center gap-1.5 py-3.5 px-2 transition-all border-b-2 ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
             activeTab === "train"
-              ? "bg-white text-emerald-700 border-emerald-600 font-black shadow-2xs"
-              : "text-slate-600 hover:bg-slate-100/70 border-transparent"
+              ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
+              : "text-slate-600 hover:bg-slate-100/70"
           }`}
         >
           <Train className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -169,10 +169,10 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("area")}
-          className={`flex items-center justify-center gap-1.5 py-3.5 px-2 transition-all border-b-2 ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
             activeTab === "area"
-              ? "bg-white text-emerald-700 border-emerald-600 font-black shadow-2xs"
-              : "text-slate-600 hover:bg-slate-100/70 border-transparent"
+              ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
+              : "text-slate-600 hover:bg-slate-100/70"
           }`}
         >
           <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -182,23 +182,23 @@ export function JapanesePortalSearch() {
         <button
           type="button"
           onClick={() => setActiveTab("theme")}
-          className={`flex items-center justify-center gap-1.5 py-3.5 px-2 transition-all border-b-2 ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
             activeTab === "theme"
-              ? "bg-white text-rose-600 border-rose-500 font-black shadow-2xs"
-              : "text-slate-600 hover:bg-slate-100/70 border-transparent"
+              ? "bg-white text-rose-600 font-black shadow-2xs border-b-2 sm:border-b-2 border-rose-500"
+              : "text-slate-600 hover:bg-slate-100/70"
           }`}
         >
           <Sparkles className="h-4 w-4 shrink-0 text-rose-500" />
-          <span className="truncate">{lang === "ja" ? "こだわり・ライフスタイル" : "Lifestyle & Features"}</span>
+          <span className="truncate">{lang === "ja" ? "こだわり・テーマ" : "Lifestyle & Features"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("keyword")}
-          className={`flex items-center justify-center gap-1.5 py-3.5 px-2 transition-all border-b-2 ${
+          className={`flex items-center justify-center gap-1.5 py-3 sm:py-3.5 px-2 transition-all ${
             activeTab === "keyword"
-              ? "bg-white text-emerald-700 border-emerald-600 font-black shadow-2xs"
-              : "text-slate-600 hover:bg-slate-100/70 border-transparent"
+              ? "bg-white text-emerald-700 font-black shadow-2xs border-b-2 sm:border-b-2 border-emerald-600"
+              : "text-slate-600 hover:bg-slate-100/70"
           }`}
         >
           <Search className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -207,16 +207,16 @@ export function JapanesePortalSearch() {
       </div>
 
       {/* 3. Tab Body Panels */}
-      <form onSubmit={handleSearch} className="p-4 sm:p-6 space-y-5 bg-white">
+      <form onSubmit={handleSearch} className="p-3.5 sm:p-6 space-y-4 sm:space-y-5 bg-white">
         {/* TAB 1: 沿線・駅から探す */}
         {activeTab === "train" && (
           <div className="space-y-4">
             <div>
               <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-2">
-                <span className="h-2 w-2 rounded-full bg-[#00a854]" />
+                <span className="h-2 w-2 rounded-full bg-emerald-600" />
                 <span>人気沿線からワンクリック選択 (Popular Train Lines):</span>
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                 {MAJOR_TRAIN_LINES.map((line) => {
                   const isSelected = selectedLine === line.name;
                   return (
@@ -229,7 +229,7 @@ export function JapanesePortalSearch() {
                       }}
                       className={`text-left p-2.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-between ${
                         isSelected
-                          ? "bg-emerald-50 border-[#00a854] text-[#008836] shadow-xs"
+                          ? "bg-emerald-50 border-emerald-600 text-emerald-800 shadow-2xs"
                           : "border-slate-200 hover:border-emerald-300 hover:bg-slate-50 text-slate-800"
                       }`}
                     >
@@ -237,7 +237,7 @@ export function JapanesePortalSearch() {
                         <span className="block truncate">{line.name}</span>
                         <span className="text-[10px] text-slate-400 block truncate">主要駅: {line.station}</span>
                       </div>
-                      {isSelected && <Check className="h-4 w-4 text-[#00a854] shrink-0" />}
+                      {isSelected && <Check className="h-4 w-4 text-emerald-600 shrink-0" />}
                     </button>
                   );
                 })}
@@ -326,10 +326,10 @@ export function JapanesePortalSearch() {
 
             <div>
               <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-2">
-                <span className="h-2 w-2 rounded-full bg-[#00a854]" />
+                <span className="h-2 w-2 rounded-full bg-emerald-600" />
                 <span>人気市区町村・エリアを選択 (Select Ward):</span>
               </label>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                 {TOKYO_WARDS.map((ward) => {
                   const isSelected = selectedWard === ward.name;
                   return (
@@ -339,7 +339,7 @@ export function JapanesePortalSearch() {
                       onClick={() => setSelectedWard(isSelected ? "" : ward.name)}
                       className={`p-2.5 rounded-xl border text-xs font-bold transition-all text-center ${
                         isSelected
-                          ? "bg-emerald-50 border-[#00a854] text-[#008836] shadow-xs ring-1 ring-[#00a854]"
+                          ? "bg-emerald-50 border-emerald-600 text-emerald-800 shadow-2xs ring-1 ring-emerald-600"
                           : "border-slate-200 hover:border-emerald-300 hover:bg-slate-50 text-slate-800"
                       }`}
                     >
@@ -360,7 +360,7 @@ export function JapanesePortalSearch() {
                 <select
                   value={maxRent}
                   onChange={(e) => setMaxRent(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-800 focus:border-[#00a854] focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-800 focus:border-emerald-600 focus:outline-none"
                 >
                   <option value="">上限なし (No limit)</option>
                   <option value="100000">〜10.0万円以下</option>
@@ -377,7 +377,7 @@ export function JapanesePortalSearch() {
                 <select
                   value={layout}
                   onChange={(e) => setLayout(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-800 focus:border-[#00a854] focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-800 focus:border-emerald-600 focus:outline-none"
                 >
                   <option value="">指定なし (All Layouts)</option>
                   <option value="1R/1K">1R / 1K</option>
@@ -394,10 +394,10 @@ export function JapanesePortalSearch() {
         {activeTab === "theme" && (
           <div className="space-y-4">
             <p className="text-xs text-slate-500 font-medium">
-              SUUMO定番の人気条件をチェックして、理想の暮らしにフィットする物件を一発検索！
+              Z世代に定番の人気条件をチェックして、理想の暮らしにフィットする物件を一発検索！
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
               {[
                 { id: "noDeposit", label: "敷金・礼金0円", sub: "初期費用節約", hot: true },
                 { id: "nearStation", label: "駅近 徒歩5分以内", sub: "雨でも通勤快適", hot: true },

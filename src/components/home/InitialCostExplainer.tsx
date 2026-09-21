@@ -128,18 +128,18 @@ export function InitialCostExplainer() {
         </div>
 
         {/* Right: Output Summary Card */}
-        <div className="lg:col-span-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-5 sm:p-6 text-white space-y-4 shadow-lg">
-          <div className="flex items-center justify-between border-b border-slate-700 pb-3">
+        <div className="lg:col-span-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-4 sm:p-6 text-white space-y-4 shadow-lg">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-3">
             <span className="text-xs text-slate-300 font-bold">概算初期費用 (目安総額)</span>
             {savedAmount > 0 && (
-              <span className="bg-rose-500 text-white text-[11px] font-black px-2 py-0.5 rounded-full">
+              <span className="bg-rose-500 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-full">
                 約 ¥{savedAmount.toLocaleString()} 節約！
               </span>
             )}
           </div>
 
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-emerald-400 tracking-tight">
               ¥{totalCost.toLocaleString()}
             </span>
             <span className="text-xs text-slate-300">
@@ -148,7 +148,7 @@ export function InitialCostExplainer() {
           </div>
 
           {/* Quick Breakdown Badges */}
-          <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-800/80 p-3 rounded-xl text-slate-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-slate-800/80 p-3 rounded-xl text-slate-300">
             <div>前家賃＋共益費: <strong className="text-white">¥{(rentYen + managementFee).toLocaleString()}</strong></div>
             <div>敷金・礼金: <strong className="text-white">¥{(deposit + keyMoney).toLocaleString()}</strong></div>
             <div>仲介手数料: <strong className="text-white">¥{brokerageFee.toLocaleString()}</strong></div>
@@ -157,7 +157,7 @@ export function InitialCostExplainer() {
 
           <Link
             href={`/search?deposit=0&keyMoney=0&maxPrice=${rentYen}`}
-            className="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 py-3 text-xs font-black text-white shadow-md transition-all"
+            className="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 py-3 text-xs font-black text-white shadow-md transition-all active:scale-[0.99]"
           >
             <span>この予算で敷礼0のお部屋を探す</span>
             <ArrowRight className="h-3.5 w-3.5" />

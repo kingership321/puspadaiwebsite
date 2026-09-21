@@ -157,7 +157,7 @@ export default async function HomePage() {
               <span>いま若者に選ばれている住まい探しポータル</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.15]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.2]">
               もっと私らしく、自由に暮らす。<br />
               <span className="bg-gradient-to-r from-rose-600 via-amber-600 to-emerald-600 bg-clip-text text-transparent">
                 写真とリアルな声で探す、お気に入りの部屋。
@@ -169,20 +169,20 @@ export default async function HomePage() {
             </p>
 
             {/* Psychological Safety Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs font-bold text-slate-700">
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1 text-[11px] sm:text-xs font-bold text-slate-700">
+              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                 <span>しつこい営業電話一切ナシ</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
                 <MessageCircle className="h-3.5 w-3.5 text-[#06C755]" />
                 <span>LINEチャットだけで完結</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
                 <Coins className="h-3.5 w-3.5 text-amber-600" />
                 <span>初期費用の明朗会計</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+              <span className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
                 <Smartphone className="h-3.5 w-3.5 text-blue-600" />
                 <span>来店不要オンライン内見</span>
               </span>
@@ -195,7 +195,7 @@ export default async function HomePage() {
           </div>
 
           {/* Trendy Hashtag Shortcut Pills */}
-          <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-2 pt-1">
+          <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1">
             <span className="text-slate-500 font-black text-xs mr-1 flex items-center gap-1">
               <Flame className="h-4 w-4 text-rose-500" />
               <span>人気タグ:</span>
@@ -229,7 +229,7 @@ export default async function HomePage() {
       </section>
 
       {/* 3. Main Body Content Container */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 space-y-16">
+      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12 sm:space-y-16">
         {/* SECTION A: Instagram-Style Youth Town Stories */}
         <YouthAreaStories />
 
