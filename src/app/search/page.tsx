@@ -4,7 +4,19 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { PropertyDto } from "@/types";
 import { PropertyCard } from "@/components/property/PropertyCard";
-import { PropertyMap } from "@/components/map/PropertyMap";
+import dynamic from "next/dynamic";
+
+const PropertyMap = dynamic(
+  () => import("@/components/map/PropertyMap").then((mod) => mod.PropertyMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 text-xs font-semibold animate-pulse border border-slate-200">
+        地図を読み込み中 (Loading Map)...
+      </div>
+    ),
+  }
+);
 import { FilterBar } from "@/components/search/FilterBar";
 import { FilterDrawer } from "@/components/search/FilterDrawer";
 import { CompareBar } from "@/components/property/CompareBar";

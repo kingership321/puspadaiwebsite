@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 import { PropertyDto } from "@/types";
-import { formatCurrency, formatPriceCompact } from "@/lib/utils";
-import { MapPin, Plus, Minus, Compass, X, Bed, Bath, Sparkles, Navigation } from "lucide-react";
+import { formatJapanesePrice } from "@/lib/utils";
+import { Plus, Minus, Navigation, Layers, Compass } from "lucide-react";
 
 interface PropertyMapProps {
   properties: PropertyDto[];
@@ -14,6 +13,14 @@ interface PropertyMapProps {
   className?: string;
 }
 
+const METROPOLIS_PRESETS = [
+  { name: "東京", nameEn: "Tokyo", lat: 35.6762, lng: 139.6503, zoom: 12 },
+  { name: "大阪", nameEn: "Osaka", lat: 34.6937, lng: 135.5023, zoom: 13 },
+  { name: "京都", nameEn: "Kyoto", lat: 35.0116, lng: 135.7681, zoom: 13 },
+  { name: "横浜", nameEn: "Yokohama", lat: 35.4437, lng: 139.6380, zoom: 13 },
+  { name: "福岡", nameEn: "Fukuoka", lat: 33.5904, lng: 130.4017, zoom: 13 },
+];
+
 export function PropertyMap({
   properties,
   selectedPropertyId,
@@ -21,251 +28,305 @@ export function PropertyMap({
   onSearchThisArea,
   className = "",
 }: PropertyMapProps) {
-  const [selectedProperty, setSelectedProperty] = useState<PropertyDto | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
-  const [isPanning, setIsPanning] = useState(false);
-  const [hasMoved, setHasMoved] = useState(false);
-  const startDragRef = useRef({ x: 0, y: 0 });
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markersRef = useRef<{ [key: string]: any }>({});
+  const [mapReady, setMapReady] = useState(false);
+  const [activeCity, setActiveCity] = useState<string | null>(null);
 
+  // Initialize Leaflet Map
   useEffect(() => {
-    if (selectedPropertyId) {
-      const found = properties.find((p) => p.id === selectedPropertyId);
-      if (found) setSelectedProperty(found);
+    if (typeof window === "undefined" || !mapContainerRef.current) return;
+
+    let isMounted = true;
+
+    async function initMap() {
+      const L = (await import("leaflet")).default;
+
+      if (!mapContainerRef.current || mapInstanceRef.current) return;
+
+      // Determine initial center
+      const validProps = properties.filter((p) => p.latitude && p.longitude);
+      const initialLat = validProps.length > 0 ? validProps[0].latitude : 35.6762;
+      const initialLng = validProps.length > 0 ? validProps[0].longitude : 139.6503;
+
+      // Initialize map instance
+      const map = L.map(mapContainerRef.current, {
+        center: [initialLat, initialLng],
+        zoom: 12,
+        zoomControl: false,
+        attributionControl: false,
+      });
+
+      // CartoDB Voyager Tile Layer (Modern, crisp, includes English and Japanese labels)
+      const tileLayer = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          subdomains: "abcd",
+          maxZoom: 19,
+        }
+      ).addTo(map);
+
+      // Attribution
+      L.control
+        .attribution({ position: "bottomright", prefix: false })
+        .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a> &copy; <a href="https://carto.com/" target="_blank" rel="noopener">CARTO</a>')
+        .addTo(map);
+
+      mapInstanceRef.current = map;
+      if (isMounted) setMapReady(true);
+
+      // Handle map drag/zoom for search this area
+      map.on("moveend", () => {
+        if (onSearchThisArea) {
+          const bounds = map.getBounds();
+          onSearchThisArea({
+            minLat: bounds.getSouth(),
+            maxLat: bounds.getNorth(),
+            minLng: bounds.getWest(),
+            maxLng: bounds.getEast(),
+          });
+        }
+      });
     }
-  }, [selectedPropertyId, properties]);
 
-  // Compute bounding box of properties to center
-  const lats = properties.map((p) => p.latitude);
-  const lngs = properties.map((p) => p.longitude);
+    initMap();
 
-  const minLat = lats.length > 0 ? Math.min(...lats) : 40.7128;
-  const maxLat = lats.length > 0 ? Math.max(...lats) : 40.7828;
-  const minLng = lngs.length > 0 ? Math.min(...lngs) : -74.0060;
-  const maxLng = lngs.length > 0 ? Math.max(...lngs) : -73.9560;
-
-  const centerLat = (minLat + maxLat) / 2;
-  const centerLng = (minLng + maxLng) / 2;
-  const spanLat = Math.max(maxLat - minLat, 0.04);
-  const spanLng = Math.max(maxLng - minLng, 0.04);
-
-  // Convert lat/lng to container % coordinates
-  const getCoordinates = (lat: number, lng: number) => {
-    const x = ((lng - (centerLng - spanLng * 0.6)) / (spanLng * 1.2)) * 100;
-    const y = (((centerLat + spanLat * 0.6) - lat) / (spanLat * 1.2)) * 100;
-    return {
-      x: Math.max(8, Math.min(92, x)),
-      y: Math.max(8, Math.min(92, y)),
+    return () => {
+      isMounted = false;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
     };
-  };
+  }, []);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsPanning(true);
-    startDragRef.current = { x: e.clientX - panOffset.x, y: e.clientY - panOffset.y };
-  };
+  // Update Markers whenever properties or selection changes
+  useEffect(() => {
+    if (!mapReady || !mapInstanceRef.current) return;
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isPanning) return;
-    const newX = e.clientX - startDragRef.current.x;
-    const newY = e.clientY - startDragRef.current.y;
-    setPanOffset({ x: newX, y: newY });
-    setHasMoved(true);
-  };
+    async function renderMarkers() {
+      const L = (await import("leaflet")).default;
+      const map = mapInstanceRef.current;
 
-  const handleMouseUp = () => {
-    setIsPanning(false);
-  };
+      // Remove existing markers
+      Object.values(markersRef.current).forEach((marker: any) => marker.remove());
+      markersRef.current = {};
+
+      const validProps = properties.filter((p) => p.latitude && p.longitude);
+      if (validProps.length === 0) return;
+
+      const bounds = L.latLngBounds([]);
+
+      validProps.forEach((prop) => {
+        const isSelected = prop.id === selectedPropertyId;
+        const priceStr = formatJapanesePrice(prop.price, prop.listingType === "RENT", "ja");
+        const latLng = L.latLng(prop.latitude, prop.longitude);
+        bounds.extend(latLng);
+
+        // Custom HTML Marker with Japanese Real Estate badge design
+        const customIcon = L.divIcon({
+          className: "custom-property-pin",
+          html: `
+            <div style="position: relative; display: inline-block; cursor: pointer; transform: translate(-50%, -100%);">
+              <div style="
+                background: ${isSelected ? "#15803d" : "#ffffff"};
+                color: ${isSelected ? "#ffffff" : "#166534"};
+                border: 2px solid ${isSelected ? "#14532d" : "#15803d"};
+                padding: 4px 8px;
+                border-radius: 9999px;
+                font-size: 11px;
+                font-weight: 800;
+                white-space: nowrap;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                transition: all 0.15s ease;
+                transform: ${isSelected ? "scale(1.15)" : "scale(1)"};
+                z-index: ${isSelected ? 100 : 10};
+              ">
+                <span>${priceStr}</span>
+              </div>
+              <div style="
+                width: 8px;
+                height: 8px;
+                background: ${isSelected ? "#15803d" : "#ffffff"};
+                border-right: 2px solid ${isSelected ? "#14532d" : "#15803d"};
+                border-bottom: 2px solid ${isSelected ? "#14532d" : "#15803d"};
+                transform: rotate(45deg);
+                margin: -4px auto 0;
+              "></div>
+            </div>
+          `,
+          iconSize: [0, 0],
+        });
+
+        const marker = L.marker(latLng, { icon: customIcon }).addTo(map);
+
+        // Rich Popup Card
+        const imageUrl = prop.images?.[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80";
+        const stationText = prop.stationName ? `${prop.stationLine || ""} ${prop.stationName}駅 徒歩${prop.walkMinutes || 5}分` : "";
+
+        const popupContent = `
+          <div style="width: 240px; font-family: sans-serif;">
+            <div style="height: 120px; overflow: hidden; position: relative;">
+              <img src="${imageUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="${prop.titleJa || prop.title}" />
+              <div style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px;">
+                ${prop.propertyType}
+              </div>
+            </div>
+            <div style="padding: 10px 12px;">
+              <div style="font-size: 15px; font-weight: 900; color: #15803d; margin-bottom: 2px;">
+                ${priceStr}
+              </div>
+              <div style="font-size: 12px; font-weight: bold; color: #0f172a; line-height: 1.3; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                ${prop.titleJa || prop.title}
+              </div>
+              ${stationText ? `<div style="font-size: 11px; color: #475569; margin-bottom: 4px;">🚉 ${stationText}</div>` : ""}
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">
+                ${prop.layout || "1LDK"} • ${prop.area}㎡
+              </div>
+              <a href="/property/${prop.slug}" style="
+                display: block;
+                text-align: center;
+                background: #15803d;
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: bold;
+                padding: 6px 0;
+                border-radius: 6px;
+                text-decoration: none;
+              ">
+                物件詳細を見る
+              </a>
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent, { maxWidth: 260 });
+
+        marker.on("click", () => {
+          if (onSelectProperty) onSelectProperty(prop);
+        });
+
+        markersRef.current[prop.id] = marker;
+      });
+
+      // Fit bounds if we have multiple points and no specific property is selected
+      if (!selectedPropertyId && validProps.length > 0) {
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+
+    renderMarkers();
+  }, [properties, selectedPropertyId, mapReady]);
+
+  // Pan to selected property when selection changes
+  useEffect(() => {
+    if (!mapReady || !mapInstanceRef.current || !selectedPropertyId) return;
+    const marker = markersRef.current[selectedPropertyId];
+    if (marker) {
+      const latLng = marker.getLatLng();
+      mapInstanceRef.current.setView(latLng, Math.max(mapInstanceRef.current.getZoom(), 14), {
+        animate: true,
+      });
+      marker.openPopup();
+    }
+  }, [selectedPropertyId, mapReady]);
 
   const handleZoomIn = () => {
-    setZoomLevel((prev) => Math.min(prev + 0.25, 2.5));
-    setHasMoved(true);
+    if (mapInstanceRef.current) mapInstanceRef.current.zoomIn();
   };
 
   const handleZoomOut = () => {
-    setZoomLevel((prev) => Math.max(prev - 0.25, 0.75));
-    setHasMoved(true);
+    if (mapInstanceRef.current) mapInstanceRef.current.zoomOut();
   };
 
-  const handleResetMap = () => {
-    setZoomLevel(1);
-    setPanOffset({ x: 0, y: 0 });
-    setHasMoved(false);
-  };
-
-  const handleSearchAreaClick = () => {
-    setHasMoved(false);
-    if (onSearchThisArea) {
-      onSearchThisArea({
-        minLat: centerLat - spanLat * 0.5,
-        maxLat: centerLat + spanLat * 0.5,
-        minLng: centerLng - spanLng * 0.5,
-        maxLng: centerLng + spanLng * 0.5,
+  const handleCityJump = (city: typeof METROPOLIS_PRESETS[0]) => {
+    if (mapInstanceRef.current) {
+      setActiveCity(city.nameEn);
+      mapInstanceRef.current.flyTo([city.lat, city.lng], city.zoom, {
+        duration: 1.2,
       });
     }
   };
 
+  const handleResetBounds = () => {
+    if (!mapInstanceRef.current) return;
+    const validProps = properties.filter((p) => p.latitude && p.longitude);
+    if (validProps.length === 0) {
+      mapInstanceRef.current.setView([35.6762, 139.6503], 12);
+      return;
+    }
+    const L = (window as any).L;
+    if (L) {
+      const bounds = L.latLngBounds(validProps.map((p) => [p.latitude, p.longitude]));
+      mapInstanceRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    }
+  };
+
   return (
-    <div
-      className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-200 bg-[#e5eef4] select-none ${className}`}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-    >
-      {/* Stylized Modern Map Canvas / Grid Graphic */}
-      <div
-        className="absolute inset-0 transition-transform duration-75 cursor-grab active:cursor-grabbing"
-        style={{
-          transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
-          transformOrigin: "center center",
-        }}
-      >
-        {/* Background vector stylized roads and waterways */}
-        <svg className="h-full w-full opacity-40" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cbd5e1" strokeWidth="1" />
-            </pattern>
-            <pattern id="roadGrid" width="160" height="160" patternUnits="userSpaceOnUse">
-              <path d="M 160 0 L 0 0 0 160" fill="none" stroke="#94a3b8" strokeWidth="2.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="#f1f5f9" />
-          <rect width="100%" height="100%" fill="url(#grid)" />
-          <rect width="100%" height="100%" fill="url(#roadGrid)" />
-          {/* Waterway curves */}
-          <path
-            d="M -100,200 Q 250,150 450,300 T 900,450"
-            fill="none"
-            stroke="#bae6fd"
-            strokeWidth="48"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 150,-50 Q 300,200 650,250 T 1200,600"
-            fill="none"
-            stroke="#e0f2fe"
-            strokeWidth="32"
-          />
-        </svg>
+    <div className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm ${className}`}>
+      {/* Map Container */}
+      <div ref={mapContainerRef} className="h-full w-full bg-slate-100 z-0" />
 
-        {/* Property Price Markers */}
-        {properties.map((property) => {
-          const { x, y } = getCoordinates(property.latitude, property.longitude);
-          const isSelected = selectedProperty?.id === property.id;
-
-          return (
-            <div
-              key={property.id}
-              style={{ top: `${y}%`, left: `${x}%` }}
-              className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedProperty(property);
-                if (onSelectProperty) onSelectProperty(property);
-              }}
-            >
-              <button
-                className={`price-marker flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-black shadow-md border transition-all ${
-                  isSelected
-                    ? "bg-slate-950 text-white border-slate-950 scale-110 ring-4 ring-brand-500/30 z-30"
-                    : "bg-white text-slate-900 border-slate-300/80 hover:border-brand-600 hover:text-brand-700 hover:scale-105"
-                }`}
-              >
-                <span>{formatPriceCompact(property.price, property.currency)}</span>
-              </button>
-            </div>
-          );
-        })}
+      {/* Top Quick City Jump Bar */}
+      <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-xl bg-white/95 p-1.5 shadow-md backdrop-blur-md border border-slate-200/80">
+        <span className="px-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          エリア
+        </span>
+        {METROPOLIS_PRESETS.map((city) => (
+          <button
+            key={city.nameEn}
+            type="button"
+            onClick={() => handleCityJump(city)}
+            className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-colors ${
+              activeCity === city.nameEn
+                ? "bg-emerald-700 text-white shadow-2xs"
+                : "text-slate-700 hover:bg-slate-100"
+            }`}
+          >
+            {city.name}
+          </button>
+        ))}
       </div>
 
-      {/* "Search this area" Button (Top Center) */}
-      {hasMoved && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 animate-fade-in">
+      {/* Floating Zoom & Location Controls */}
+      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+        <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-md border border-slate-200">
           <button
-            onClick={handleSearchAreaClick}
-            className="flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-md hover:bg-slate-950 transition-transform active:scale-95"
+            type="button"
+            onClick={handleZoomIn}
+            className="flex h-9 w-9 items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors border-b border-slate-100"
+            title="拡大 (Zoom In)"
           >
-            <Compass className="h-3.5 w-3.5 text-brand-400 animate-spin" />
-            <span>Search this area</span>
+            <Plus className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            className="flex h-9 w-9 items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors"
+            title="縮小 (Zoom Out)"
+          >
+            <Minus className="h-4 w-4" />
           </button>
         </div>
-      )}
 
-      {/* Map Floating Controls (Top Right) */}
-      <div className="absolute top-4 right-4 z-30 flex flex-col gap-1 rounded-xl bg-white/95 p-1 shadow-lg border border-slate-200/80 backdrop-blur-md">
         <button
-          onClick={handleZoomIn}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
-          title="Zoom In"
+          type="button"
+          onClick={handleResetBounds}
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-700 shadow-md border border-slate-200 hover:bg-slate-100 transition-colors"
+          title="全物件を表示 (Fit All Listings)"
         >
-          <Plus className="h-4 w-4" />
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
-          title="Zoom Out"
-        >
-          <Minus className="h-4 w-4" />
-        </button>
-        <button
-          onClick={handleResetMap}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
-          title="Recenter Map"
-        >
-          <Navigation className="h-3.5 w-3.5" />
+          <Compass className="h-4 w-4 text-emerald-700" />
         </button>
       </div>
 
-      {/* Selected Property Preview Card Overlay (Bottom Left) */}
-      {selectedProperty && (
-        <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:w-80 z-30 animate-fade-in">
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl">
-            <button
-              onClick={() => setSelectedProperty(null)}
-              className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 z-10"
-              aria-label="Close preview"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-
-            <div className="flex gap-3">
-              <img
-                src={selectedProperty.images?.[0]?.url || ""}
-                alt={selectedProperty.title}
-                className="h-20 w-20 rounded-xl object-cover shrink-0"
-              />
-              <div className="flex-1 min-w-0 pr-4">
-                <span className="text-base font-black text-slate-900">
-                  {formatCurrency(selectedProperty.price, selectedProperty.currency)}
-                  {selectedProperty.listingType === "RENT" && <span className="text-xs font-semibold text-slate-500">/mo</span>}
-                </span>
-                <p className="text-xs font-bold text-slate-800 truncate mt-0.5">{selectedProperty.title}</p>
-                <p className="text-[11px] text-slate-500 truncate">{selectedProperty.address}</p>
-
-                <div className="mt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-600">
-                  <span>{selectedProperty.bedrooms} bd</span>
-                  <span>•</span>
-                  <span>{selectedProperty.bathrooms} ba</span>
-                  <span>•</span>
-                  <span>{selectedProperty.area} sqft</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-[11px] font-medium text-brand-700 bg-brand-50 px-2 py-0.5 rounded">
-                {selectedProperty.propertyType}
-              </span>
-              <Link
-                href={`/property/${selectedProperty.slug}`}
-                className="font-bold text-slate-900 hover:text-brand-700 hover:underline"
-              >
-                Full Details →
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Bottom Listing Counter Tag */}
+      <div className="absolute bottom-3 left-3 z-10 rounded-lg bg-slate-900/80 px-3 py-1.5 text-xs font-semibold text-white shadow-md backdrop-blur-sm">
+        表示中: <span className="font-bold text-emerald-400">{properties.length}件</span> の物件
+      </div>
     </div>
   );
 }
