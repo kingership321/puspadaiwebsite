@@ -119,17 +119,17 @@ export default async function HomePage() {
   return (
     <div className="bg-[#FAF9F5] min-h-screen text-slate-800 pb-20 w-full max-w-full overflow-x-hidden">
       {/* 1. Youth Peace-of-Mind Announcement Ribbon */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-xs py-2 px-3 sm:px-4 shadow-2xs w-full overflow-hidden">
-        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-xs py-2 sm:py-2.5 px-3 sm:px-6 shadow-2xs w-full">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4 text-center sm:text-left">
+          <div className="flex items-center justify-center sm:justify-start gap-2 min-w-0">
             <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
               新生活応援 2026
             </span>
-            <span className="text-emerald-50 font-medium text-xs">
-              敷金・礼金0円＆駅近マンション多数！LINEチャットで内見予約・見積もり相談受付中
+            <span className="text-emerald-50 font-medium text-xs leading-snug">
+              敷金・礼金0円＆駅近物件多数！LINEで内見・相談受付中
             </span>
           </div>
-          <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold shrink-0 whitespace-nowrap">
+          <div className="flex items-center justify-center md:justify-end gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold shrink-0 whitespace-nowrap">
             <span className="flex items-center gap-1 text-white shrink-0 whitespace-nowrap">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-200 shrink-0" />
               <span className="shrink-0 whitespace-nowrap">おとり物件ゼロ</span>
