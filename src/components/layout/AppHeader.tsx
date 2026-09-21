@@ -92,44 +92,44 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
   };
 
   const navLinks = [
-    { href: "/rent", label: lang === "ja" ? "賃貸を探す" : "Rent" },
-    { href: "/buy", label: lang === "ja" ? "購入・売買" : "Buy" },
-    { href: "/search", label: lang === "ja" ? "物件一覧" : "All Listings" },
-    { href: "/guides", label: lang === "ja" ? "住まいガイド" : "Guides" },
+    { href: "/rent", label: lang === "ja" ? "賃貸" : "Rent" },
+    { href: "/buy", label: lang === "ja" ? "購入" : "Buy" },
+    { href: "/search", label: lang === "ja" ? "物件一覧" : "Listings" },
+    { href: "/guides", label: lang === "ja" ? "ガイド" : "Guides" },
   ];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/98 shadow-xs transition-all">
       {/* 0. Youth-Friendly Top Utility Ribbon */}
-      <div className="hidden lg:block bg-gradient-to-r from-emerald-50 via-slate-50 to-amber-50/50 border-b border-slate-200/80 text-xs text-slate-600 py-1.5 px-4">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <div className="flex items-center gap-3 text-[11px]">
-            <span className="inline-flex items-center gap-1.5 font-black text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full">
-              <Sparkles className="h-3 w-3 text-emerald-600" />
-              <span>Z世代・ミレニアル世代の住まい探し</span>
+      <div className="hidden lg:block bg-gradient-to-r from-emerald-50 via-slate-50 to-amber-50/50 border-b border-slate-200/80 text-xs text-slate-600 py-1.5 px-4 overflow-hidden">
+        <div className="mx-auto max-w-7xl flex items-center justify-between gap-4 overflow-hidden">
+          <div className="flex items-center gap-2.5 text-[11px] shrink-0 whitespace-nowrap">
+            <span className="inline-flex items-center gap-1.5 font-black text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+              <Sparkles className="h-3 w-3 text-emerald-600 shrink-0" />
+              <span className="shrink-0 whitespace-nowrap">Z世代・若者の住まい探し</span>
             </span>
             <span className="text-slate-300">|</span>
-            <span className="text-slate-600 font-bold flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-              <span>しつこい営業電話ゼロ保証 • 来店不要オンライン内見OK</span>
+            <span className="text-slate-600 font-bold hidden xl:flex items-center gap-1 shrink-0 whitespace-nowrap">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+              <span className="shrink-0 whitespace-nowrap">営業電話ゼロ保証 • オンライン内見OK</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-[11px]">
+          <div className="flex items-center gap-2.5 text-[11px] shrink-0 whitespace-nowrap ml-auto">
             <a
               href="https://line.me/R/ti/p/@havensuumo"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-[#06C755] font-black hover:underline"
+              className="flex items-center gap-1 text-[#06C755] font-black hover:underline shrink-0 whitespace-nowrap"
             >
-              <span>LINEでサクッと相談受付中</span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#06C755] animate-ping" />
+              <span className="shrink-0 whitespace-nowrap">LINEでサクッと相談</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#06C755] animate-ping shrink-0" />
             </a>
             <span className="text-slate-300">|</span>
-            <Link href="/guides" className="text-slate-500 hover:text-emerald-700 transition-colors">
+            <Link href="/guides" className="text-slate-500 hover:text-emerald-700 transition-colors shrink-0 whitespace-nowrap">
               一人暮らしガイド
             </Link>
-            <Link href="/about" className="text-slate-500 hover:text-emerald-700 transition-colors">
+            <Link href="/about" className="text-slate-500 hover:text-emerald-700 transition-colors shrink-0 whitespace-nowrap">
               運営会社
             </Link>
           </div>
@@ -138,35 +138,35 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-1.5 sm:gap-2 px-3 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Brand Logo */}
-        <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+        <div className="flex items-center gap-3 lg:gap-6 min-w-0">
           <Link href="/" className="flex items-center gap-2 text-slate-900 group shrink-0 min-w-0">
             <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00a854] to-[#10b981] text-white shadow-md shadow-[#00a854]/20 group-hover:scale-105 transition-transform shrink-0">
               <Building2 className="h-5 w-5" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1">
-                <span className="text-lg sm:text-xl font-black tracking-tight text-slate-900 leading-none">
+                <span className="text-lg sm:text-xl font-black tracking-tight text-slate-900 leading-none shrink-0 whitespace-nowrap">
                   Haven<span className="text-[#00a854]">SUUMO</span>
                 </span>
-                <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2 shrink-0">
+                <span className="rounded bg-emerald-100 text-[#008836] text-[9px] font-extrabold px-1 py-0.2 shrink-0 whitespace-nowrap">
                   公式
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-slate-500 mt-0.5 hidden sm:block truncate">
-                {lang === "ja" ? "暮らしを楽しむ、お部屋探しポータル" : "Next-Gen Japanese Lifestyle Housing"}
+              <span className="text-[10px] font-bold text-slate-500 mt-0.5 hidden sm:block whitespace-nowrap truncate max-w-[150px] lg:max-w-[210px]">
+                {lang === "ja" ? "理想のお部屋探しポータル" : "Lifestyle Housing Portal"}
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-0.5 lg:gap-1 shrink-0">
             {navLinks.map((link) => {
               const isActive = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-colors ${
+                  className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 rounded-lg px-2.5 lg:px-3 py-1.5 text-xs font-bold transition-colors ${
                     isActive
                       ? "bg-emerald-50 text-[#008836] border border-emerald-200"
                       : "text-slate-700 hover:bg-slate-50 hover:text-[#00a854]"
@@ -186,44 +186,44 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
             href="https://line.me/R/ti/p/@havensuumo"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-1.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white px-3 py-1.5 text-xs font-black shadow-xs transition-all hover:scale-[1.02]"
+            className="hidden lg:flex items-center gap-1.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white px-2.5 lg:px-3 py-1.5 text-xs font-black shadow-xs transition-all hover:scale-[1.02] shrink-0 whitespace-nowrap"
             title="LINEで無料相談・空室確認"
           >
-            <span className="text-[10px] font-black bg-white/25 px-1 rounded-sm">LINE</span>
-            <span>相談する</span>
+            <span className="text-[10px] font-black bg-white/25 px-1 rounded-sm shrink-0">LINE</span>
+            <span className="shrink-0 whitespace-nowrap">{lang === "ja" ? "相談" : "Consult"}</span>
           </a>
 
           {/* Bilingual Language Switcher */}
           <button
             onClick={toggleLang}
-            className="flex items-center gap-1 sm:gap-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-2 sm:px-2.5 py-1 sm:py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all active:scale-95"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-2 sm:px-2.5 py-1 sm:py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all active:scale-95 shrink-0 whitespace-nowrap"
             title="Switch Language / 言語切替"
           >
             <Globe className="h-3.5 w-3.5 text-brand-600 shrink-0" />
-            <span className={lang === "ja" ? "text-brand-700 font-bold" : "text-slate-400"}>JP</span>
-            <span className="text-slate-300">|</span>
-            <span className={lang === "en" ? "text-brand-700 font-bold" : "text-slate-400"}>EN</span>
+            <span className={lang === "ja" ? "text-brand-700 font-bold shrink-0" : "text-slate-400 shrink-0"}>JP</span>
+            <span className="text-slate-300 shrink-0">|</span>
+            <span className={lang === "en" ? "text-brand-700 font-bold shrink-0" : "text-slate-400 shrink-0"}>EN</span>
           </button>
 
           {/* Compare shortcut */}
           <Link
             href="/account/compare"
-            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+            className="hidden xl:flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors shrink-0 whitespace-nowrap"
             title="Property comparison"
           >
-            <Scale className="h-4 w-4 text-slate-500" />
-            <span>{t.compare}</span>
+            <Scale className="h-4 w-4 text-slate-500 shrink-0" />
+            <span className="shrink-0 whitespace-nowrap">{t.compare}</span>
           </Link>
 
           {/* Favorites link */}
           <Link
             href="/account/saved"
-            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-rose-600 transition-colors shrink-0"
             title="Saved Properties"
           >
             <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
             {favCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow shrink-0">
                 {favCount}
               </span>
             )}
@@ -231,18 +231,18 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
 
           {/* Auth State: Logged In vs Logged Out (Hidden on mobile top bar, accessible in hamburger menu) */}
           {isLoggedOut ? (
-            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 shrink-0 whitespace-nowrap">
               <Link
                 href="/login"
-                className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                className="rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shrink-0 whitespace-nowrap"
               >
-                Log In
+                {lang === "ja" ? "ログイン" : "Log In"}
               </Link>
               <Link
                 href="/signup"
-                className="rounded-xl bg-brand-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-brand-700 transition-colors"
+                className="rounded-xl bg-brand-600 px-3 sm:px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-brand-700 transition-colors shrink-0 whitespace-nowrap"
               >
-                Sign Up
+                {lang === "ja" ? "新規登録" : "Sign Up"}
               </Link>
             </div>
           ) : (
@@ -379,34 +379,34 @@ export function AppHeader({ initialRole = "SEEKER", favoritesCount = 0 }: AppHea
               {currentRole === "ADMIN" ? (
                 <Link
                   href="/admin"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-purple-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-purple-800 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-purple-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-purple-800 transition-colors shrink-0 whitespace-nowrap"
                 >
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  Admin Center
+                  <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                  <span className="shrink-0 whitespace-nowrap">Admin Center</span>
                 </Link>
               ) : currentRole === "OWNER" ? (
                 <Link
                   href="/dashboard/listings/new"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-amber-700 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-amber-700 transition-colors shrink-0 whitespace-nowrap"
                 >
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span>Post Housing (物件掲載)</span>
+                  <PlusCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="shrink-0 whitespace-nowrap">Post Housing</span>
                 </Link>
               ) : currentRole === "AGENT" ? (
                 <Link
                   href="/dashboard/listings/new"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-800 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-brand-800 transition-colors shrink-0 whitespace-nowrap"
                 >
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span>New Listing</span>
+                  <PlusCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="shrink-0 whitespace-nowrap">New Listing</span>
                 </Link>
               ) : (
                 <Link
                   href="/account"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shrink-0 whitespace-nowrap"
                 >
-                  <User className="h-3.5 w-3.5 text-slate-500" />
-                  My Account
+                  <User className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                  <span className="shrink-0 whitespace-nowrap">My Account</span>
                 </Link>
               )}
             </>

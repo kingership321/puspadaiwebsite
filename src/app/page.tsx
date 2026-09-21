@@ -122,22 +122,22 @@ export default async function HomePage() {
       <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-xs py-2 px-3 sm:px-4 shadow-2xs w-full overflow-hidden">
         <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
-            <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0">
+            <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
               新生活応援 2026
             </span>
             <span className="text-emerald-50 font-medium text-xs">
               敷金・礼金0円＆駅近マンション多数！LINEチャットで内見予約・見積もり相談受付中
             </span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold">
-            <span className="flex items-center gap-1 text-white">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-200" />
-              <span>おとり物件ゼロ</span>
+          <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-3 text-emerald-100 text-[11px] font-bold shrink-0 whitespace-nowrap">
+            <span className="flex items-center gap-1 text-white shrink-0 whitespace-nowrap">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-200 shrink-0" />
+              <span className="shrink-0 whitespace-nowrap">おとり物件ゼロ</span>
             </span>
-            <span>•</span>
-            <span className="flex items-center gap-1 text-white">
-              <Smartphone className="h-3.5 w-3.5 text-emerald-200" />
-              <span>しつこい営業電話ナシ</span>
+            <span className="text-emerald-300/80">•</span>
+            <span className="flex items-center gap-1 text-white shrink-0 whitespace-nowrap">
+              <Smartphone className="h-3.5 w-3.5 text-emerald-200 shrink-0" />
+              <span className="shrink-0 whitespace-nowrap">しつこい営業電話ナシ</span>
             </span>
           </div>
         </div>
