@@ -8,6 +8,7 @@ import { LifestyleQuiz } from "@/components/home/LifestyleQuiz";
 import { LifestyleMoodWall } from "@/components/home/LifestyleMoodWall";
 import { InitialCostExplainer } from "@/components/home/InitialCostExplainer";
 import { YouthRealVoices } from "@/components/home/YouthRealVoices";
+import { TokyoSkylineBackdrop } from "@/components/home/TokyoSkylineSilhouette";
 import {
   Sparkles,
   ShieldCheck,
@@ -144,6 +145,9 @@ export default async function HomePage() {
 
       {/* 2. Emotional Lifestyle Hero Section */}
       <section className="relative overflow-hidden pt-8 sm:pt-12 pb-14 sm:pb-16 border-b border-slate-200/70">
+        {/* Tokyo City Skyscraper Silhouettes (Left & Right Hero Flanks) */}
+        <TokyoSkylineBackdrop />
+
         {/* Soft Decorative Gradient Blurs */}
         <div className="absolute top-0 left-1/4 -z-10 h-72 w-72 rounded-full bg-rose-200/35 blur-3xl" />
         <div className="absolute top-10 right-1/4 -z-10 h-80 w-80 rounded-full bg-amber-200/30 blur-3xl" />
