@@ -126,18 +126,28 @@ export default async function HomePage() {
   const formattedNearStation = formatList(nearStationProperties.length > 0 ? nearStationProperties : featuredProperties.slice(2, 6));
 
   return (
-    <div className="flex flex-col gap-12 sm:gap-16 pb-16 bg-[#f4f6f8]">
-      {/* 1. Portal Sub-Header Announcement Bar */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2">
+    <div className="bg-[#f4f6f8] pb-16">
+      {/* 1. Portal Sub-Header Announcement Bar (Flush with Hero, Zero White Space) */}
+      <div className="bg-slate-950 text-slate-300 text-xs py-2 px-4 border-b border-slate-800/80">
+        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="bg-brand-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded">SUUMO準拠</span>
-            <span>日本全国の主要都市・駅近の優良物件を網羅したバイリンガル不動産ポータル</span>
+            <span className="bg-brand-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded shrink-0">
+              SUUMO準拠
+            </span>
+            <span className="text-slate-300 font-medium">
+              日本全国の主要都市・駅近の優良物件を網羅したバイリンガル不動産ポータル
+            </span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
-            <span className="flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> おとり広告ゼロ保証</span>
-            <span className="hidden sm:inline">•</span>
-            <span className="hidden sm:inline flex items-center gap-1"><FileCheck2 className="h-3.5 w-3.5 text-blue-400" /> 全物件 宅建士確認済</span>
+          <div className="flex items-center gap-3 text-slate-300 text-[11px] whitespace-nowrap shrink-0">
+            <span className="inline-flex items-center gap-1.5 font-semibold">
+              <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+              <span>おとり広告ゼロ保証</span>
+            </span>
+            <span className="text-slate-700">|</span>
+            <span className="inline-flex items-center gap-1.5 font-semibold">
+              <FileCheck2 className="h-4 w-4 text-blue-400 shrink-0" />
+              <span>全物件 専任宅建士確認済</span>
+            </span>
           </div>
         </div>
       </div>
@@ -231,8 +241,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Live Market Price Benchmark Ticker (家賃相場インサイト) */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full -mt-6">
+      {/* 3. Main Content Sections (Spaced cleanly below hero) */}
+      <div className="flex flex-col gap-12 sm:gap-16">
+        {/* 3. Live Market Price Benchmark Ticker (家賃相場インサイト) */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full -mt-6">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
             <div className="flex items-center gap-2">
@@ -490,6 +502,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
