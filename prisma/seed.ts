@@ -497,6 +497,14 @@ async function main() {
     { en: "Shun Nakamura", ja: "中村 駿", email: "nakamura@example.jp" },
   ];
 
+  const agentPhotos = [
+    "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80",
+  ];
+
   for (let i = 0; i < AGENCIES.length; i++) {
     const agencyData = AGENCIES[i];
     const agency = await prisma.agency.create({
@@ -513,7 +521,7 @@ async function main() {
         slug: slugify(`${agInfo.en}-${agency.slug}`),
         email: agInfo.email,
         phone: `+81 ${3 + i}-5555-01${10 + i}`,
-        photoUrl: `https://images.unsplash.com/photo-${1500000000000 + (i * 1234567)}?w=300&auto=format&fit=crop&q=80`,
+        photoUrl: agentPhotos[i % agentPhotos.length],
         bio: `Licensed Japanese Real Estate Transaction Specialist (宅地建物取引士). Over ${7 + i} years serving local and international clients in Tokyo and Kansai.`,
         languages: "Japanese, English",
         serviceAreas: "Tokyo 23 Wards, Yokohama, Osaka, Kyoto",

@@ -7,6 +7,7 @@ import { PropertyGallery } from "@/components/property/PropertyGallery";
 import { MortgageCalculator } from "@/components/property/MortgageCalculator";
 import { InitialCostSimulator } from "@/components/property/InitialCostSimulator";
 import { PropertyCard } from "@/components/property/PropertyCard";
+import { AgentAvatar } from "@/components/property/AgentAvatar";
 import { PropertyDetailClientActions } from "./PropertyDetailClientActions";
 import {
   Bed,
@@ -540,8 +541,8 @@ export default async function PropertyDetailPage({ params }: Props) {
           {/* Certified Japanese Real Estate Agency & Agent Card */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
             <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-              <img
-                src={property.agent?.photoUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80"}
+              <AgentAvatar
+                src={property.agent?.photoUrl}
                 alt={property.agent?.name || "Licensed Agent"}
                 className="h-14 w-14 rounded-xl object-cover border border-slate-100"
               />
